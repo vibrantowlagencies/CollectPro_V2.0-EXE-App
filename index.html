@@ -984,12 +984,9 @@ const AppShell = ({ session, onLogout }) => {
 
   const PAGE_MAP = {
     dash:   <DashboardPage session={session} showToast={showToast} onTabChange={setActivePage} />,
-    visits: <ComingSoon icon="📍" title="Visit Flow — Phase 6"
-              sub="Today's appointments, log visit, collect router and store submission." />,
-    store:  <ComingSoon icon="📦" title="Store Submission — Phase 6"
-              sub="Log physical router handover at collection store." />,
-    report: <ComingSoon icon="📊" title="Report — Phase 6"
-              sub="Daily visit report and MTD collections summary." />,
+    visits: <VisitsPage session={session} showToast={showToast} />,
+    store:  <StorePage  session={session} showToast={showToast} />,
+    report: <ReportPage session={session} showToast={showToast} />,
   };
 
   return (
