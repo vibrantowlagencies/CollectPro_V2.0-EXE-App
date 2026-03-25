@@ -1,3 +1,4 @@
+<!-- CollectPro / VORS — Exec_App_v3.2.0.html | Vibrant Owl Agencies | v3.2.0 Production Release -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,9 +27,9 @@
 -->
 
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
@@ -323,35 +324,67 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-s
 <body>
 <div id="root"></div>
 
-<script type="text/babel">
-const { useState, useEffect, useCallback, useRef, useMemo } = React;
+<script>
+const {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo
+} = React;
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 lib/constants.js
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const CONFIG = {
-  API_URL:      'https://script.google.com/macros/s/AKfycbyRb7oEMdppJKouU5xCAQVq-IauFaugqXslscYChoFaXkvWzIQzHCg9q5u3AZWAlxB_Pg/exec',
-  CLIENT_ID:    'VOA_CBE',
-  SESSION_KEY:  'voa_session_exec',   // different from TC App
-  REFRESH_MS:   25 * 60 * 1000,
-  ALLOWED_ROLE: 'EXECUTIVE',         // EXECUTIVE only
-  APP_VERSION:  'v3.0.0',
-  CITIES:       ['CBE', 'CHN'],
+  API_URL: 'https://script.google.com/macros/s/AKfycbyRb7oEMdppJKouU5xCAQVq-IauFaugqXslscYChoFaXkvWzIQzHCg9q5u3AZWAlxB_Pg/exec',
+  CLIENT_ID: 'VOA_CBE',
+  SESSION_KEY: 'voa_session_exec',
+  // different from TC App
+  REFRESH_MS: 25 * 60 * 1000,
+  ALLOWED_ROLE: 'EXECUTIVE',
+  // EXECUTIVE only
+  APP_VERSION: 'v3.2.0',
+  CITIES: ['CBE', 'CHN']
 };
-
-const NAV_ITEMS = [
-  { id:'dash',    icon:'🏠', label:'Home'    },
-  { id:'visits',  icon:'📍', label:'Visits'  },
-  { id:'store',   icon:'📦', label:'Store'   },
-  { id:'report',  icon:'📊', label:'Report'  },
-];
-
-const STAT_CARDS = [
-  { id:'assigned',  cls:'teal',   icon:'📋', label:'Assigned'     },
-  { id:'today',     cls:'green',  icon:'📅', label:'Visits Today' },
-  { id:'collected', cls:'orange', icon:'✅', label:'MTD Collected' },
-  { id:'pending',   cls:'red',    icon:'⏳', label:'Still Pending' },
-];
+const NAV_ITEMS = [{
+  id: 'dash',
+  icon: '🏠',
+  label: 'Home'
+}, {
+  id: 'visits',
+  icon: '📍',
+  label: 'Visits'
+}, {
+  id: 'store',
+  icon: '📦',
+  label: 'Store'
+}, {
+  id: 'report',
+  icon: '📊',
+  label: 'Report'
+}];
+const STAT_CARDS = [{
+  id: 'assigned',
+  cls: 'teal',
+  icon: '📋',
+  label: 'Assigned'
+}, {
+  id: 'today',
+  cls: 'green',
+  icon: '📅',
+  label: 'Visits Today'
+}, {
+  id: 'collected',
+  cls: 'orange',
+  icon: '✅',
+  label: 'MTD Collected'
+}, {
+  id: 'pending',
+  cls: 'red',
+  icon: '⏳',
+  label: 'Still Pending'
+}];
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 lib/api.js
@@ -360,8 +393,8 @@ const Api = {
   async get(params) {
     const url = new URL(CONFIG.API_URL);
     url.searchParams.append('client_id', CONFIG.CLIENT_ID);
-    Object.entries(params).forEach(([k,v]) => url.searchParams.append(k, String(v)));
-    const res  = await fetch(url.toString());
+    Object.entries(params).forEach(([k, v]) => url.searchParams.append(k, String(v)));
+    const res = await fetch(url.toString());
     if (!res.ok) throw new Error('Network error: ' + res.status);
     const json = await res.json();
     if (!json.success) throw new Error(json.error || 'Request failed');
@@ -369,8 +402,14 @@ const Api = {
   },
   async post(body) {
     const r = await fetch(CONFIG.API_URL, {
-      method:'POST', headers:{'Content-Type':'text/plain'},
-      body: JSON.stringify({ client_id: CONFIG.CLIENT_ID, ...body })
+      method: 'POST',
+      headers: {
+        'Content-Type': 'text/plain'
+      },
+      body: JSON.stringify({
+        client_id: CONFIG.CLIENT_ID,
+        ...body
+      })
     });
     if (!r.ok) throw new Error('Network error: ' + r.status);
     const j = await r.json();
@@ -383,18 +422,31 @@ const Api = {
 //  📁 lib/session.js
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const SessionStore = {
-  save(data) { try { localStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(data)); } catch {} },
+  save(data) {
+    try {
+      localStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(data));
+    } catch {}
+  },
   load() {
     try {
       const raw = localStorage.getItem(CONFIG.SESSION_KEY);
       if (!raw) return null;
       const s = JSON.parse(raw);
       const parts = (s.token || '').split('|');
-      if (parts.length !== 5 || Date.now() > parseInt(parts[4])) { this.clear(); return null; }
+      if (parts.length !== 5 || Date.now() > parseInt(parts[4])) {
+        this.clear();
+        return null;
+      }
       return s;
-    } catch { return null; }
+    } catch {
+      return null;
+    }
   },
-  clear() { try { localStorage.removeItem(CONFIG.SESSION_KEY); } catch {} }
+  clear() {
+    try {
+      localStorage.removeItem(CONFIG.SESSION_KEY);
+    } catch {}
+  }
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -409,33 +461,45 @@ const Utils = {
   },
   getDateStr() {
     return new Date().toLocaleDateString('en-IN', {
-      weekday:'long', day:'numeric', month:'long', year:'numeric'
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
     });
   },
-  sanitizePin: (v) => String(v).replace(/\D/g,'').slice(0,4),
-  firstName:   (n) => (n||'').split(' ')[0],
+  sanitizePin: v => String(v).replace(/\D/g, '').slice(0, 4),
+  firstName: n => (n || '').split(' ')[0],
   todayStr() {
-    const d=new Date();
-    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   },
   tomorrowStr() {
-    const d=new Date(); d.setDate(d.getDate()+1);
-    return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   },
   buildWALink(mobile, msg) {
-    const m=String(mobile).replace(/\D/g,'');
-    const num=m.length===10?'91'+m:m;
-    return 'https://wa.me/'+num+'?text='+encodeURIComponent(msg);
-  },
+    const m = String(mobile).replace(/\D/g, '');
+    const num = m.length === 10 ? '91' + m : m;
+    return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
+  }
 };
-
 const STATUS_LABELS = {
-  FRESH:'Fresh', CALLED:'Called', APPT_FIXED:'Appt Fixed',
-  NOT_VISITED:'Not Visited', RESCHEDULED:'Rescheduled',
-  NOT_REACHABLE:'Not Reachable', COLLECTED:'Collected',
-  STRIKE_1:'Strike 1', STRIKE_2:'Strike 2', STRIKE_3:'Strike 3',
-  ISSUE_REFUND:'Refund Issue', ISSUE_RECONNECTION:'Reconnection',
-  ISSUE_MAIL:'Mail Confirm', ISSUE_JBOX:'JBox Issue', ISSUE_ADDR:'Addr Change',
+  FRESH: 'Fresh',
+  CALLED: 'Called',
+  APPT_FIXED: 'Appt Fixed',
+  NOT_VISITED: 'Not Visited',
+  RESCHEDULED: 'Rescheduled',
+  NOT_REACHABLE: 'Not Reachable',
+  COLLECTED: 'Collected',
+  STRIKE_1: 'Strike 1',
+  STRIKE_2: 'Strike 2',
+  STRIKE_3: 'Strike 3',
+  ISSUE_REFUND: 'Refund Issue',
+  ISSUE_RECONNECTION: 'Reconnection',
+  ISSUE_MAIL: 'Mail Confirm',
+  ISSUE_JBOX: 'JBox Issue',
+  ISSUE_ADDR: 'Addr Change'
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -443,47 +507,60 @@ const STATUS_LABELS = {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function useToast() {
   const [toast, setToast] = useState(null);
-  const show = useCallback((msg, type='error') => setToast({ msg, type }), []);
+  const show = useCallback((msg, type = 'error') => setToast({
+    msg,
+    type
+  }), []);
   const hide = useCallback(() => setToast(null), []);
-  return { toast, showToast: show, hideToast: hide };
+  return {
+    toast,
+    showToast: show,
+    hideToast: hide
+  };
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 hooks/useAuth.js
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function useAuth({ onSuccess, onError }) {
+function useAuth({
+  onSuccess,
+  onError
+}) {
   const [loading, setLoading] = useState(false);
   const login = useCallback(async (city, staffId, pin) => {
     setLoading(true);
     try {
       const data = await Api.get({
-        action:  'login',
-        city:    city,
+        action: 'login',
+        city: city,
         staffId: String(staffId).trim().toUpperCase(),
-        pin:     pin.trim()
+        pin: pin.trim()
       });
       if (data.role !== CONFIG.ALLOWED_ROLE) {
         throw new Error('This app is for Field Executives only');
       }
       const session = {
-        token:     data.token,
-        staffId:   data.staffId,
+        token: data.token,
+        staffId: data.staffId,
         staffName: data.staffName,
-        role:      data.role,
-        city:      data.city,
-        clientId:  data.clientId,
-        loginAt:   Date.now()
+        role: data.role,
+        city: data.city,
+        clientId: data.clientId,
+        loginAt: Date.now()
       };
       SessionStore.save(session);
       onSuccess(session);
     } catch (e) {
-      const msg = e.message.includes('Invalid') ? 'Invalid Staff ID or PIN'
-                : e.message.includes('attempts') ? 'Too many attempts. Wait 10 min.'
-                : e.message || 'Login failed';
+      const msg = e.message.includes('Invalid') ? 'Invalid Staff ID or PIN' : e.message.includes('attempts') ? 'Too many attempts. Wait 10 min.' : e.message || 'Login failed';
       onError(msg);
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   }, [onSuccess, onError]);
-  return { login, loading };
+  return {
+    login,
+    loading
+  };
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -496,11 +573,19 @@ function useTokenRefresh(session, onExpired) {
     timerRef.current = setInterval(async () => {
       try {
         const data = await Api.get({
-          action: 'login', city: session.city,
-          staffId: session.staffId, token: session.token
+          action: 'login',
+          city: session.city,
+          staffId: session.staffId,
+          token: session.token
         });
-        SessionStore.save({ ...session, token: data.token, loginAt: Date.now() });
-      } catch { onExpired(); }
+        SessionStore.save({
+          ...session,
+          token: data.token,
+          loginAt: Date.now()
+        });
+      } catch {
+        onExpired();
+      }
     }, CONFIG.REFRESH_MS);
     return () => clearInterval(timerRef.current);
   }, [session]);
@@ -509,314 +594,495 @@ function useTokenRefresh(session, onExpired) {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 components/ui/Toast.jsx
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const Toast = ({ msg, type='error', onDone }) => {
-  useEffect(() => { const t = setTimeout(onDone, 3200); return () => clearTimeout(t); }, []);
-  return <div className="toast-wrap"><div className={`toast-inner ${type}`}>{msg}</div></div>;
+const Toast = ({
+  msg,
+  type = 'error',
+  onDone
+}) => {
+  useEffect(() => {
+    const t = setTimeout(onDone, 3200);
+    return () => clearTimeout(t);
+  }, []);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "toast-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `toast-inner ${type}`
+  }, msg));
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 components/ui/PinDots.jsx
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const PinDots = ({ length=0, total=4 }) => (
-  <div className="pin-dots">
-    {Array.from({ length:total }).map((_,i) => (
-      <div key={i} className={`pin-dot${length > i ? ' filled' : ''}`} />
-    ))}
-  </div>
-);
+const PinDots = ({
+  length = 0,
+  total = 4
+}) => /*#__PURE__*/React.createElement("div", {
+  className: "pin-dots"
+}, Array.from({
+  length: total
+}).map((_, i) => /*#__PURE__*/React.createElement("div", {
+  key: i,
+  className: `pin-dot${length > i ? ' filled' : ''}`
+})));
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 components/ui/BrandLogo.jsx
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const BrandLogo = ({ size='lg' }) => {
+const BrandLogo = ({
+  size = 'lg'
+}) => {
   const lg = size === 'lg';
-  return (
-    <div style={{
-      width: lg?72:34, height: lg?72:34,
-      background:'linear-gradient(135deg,var(--accent),var(--accent-dk))',
-      borderRadius: lg?20:10,
-      display:'flex', alignItems:'center', justifyContent:'center',
-      fontFamily:'var(--fh)', fontWeight:800, fontSize: lg?22:11,
-      color:'#fff', letterSpacing:'.5px', flexShrink:0,
-      boxShadow: lg?'0 8px 28px rgba(13,148,136,.28)':'none'
-    }}>VOA</div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: lg ? 72 : 34,
+      height: lg ? 72 : 34,
+      background: 'linear-gradient(135deg,var(--accent),var(--accent-dk))',
+      borderRadius: lg ? 20 : 10,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontFamily: 'var(--fh)',
+      fontWeight: 800,
+      fontSize: lg ? 22 : 11,
+      color: '#fff',
+      letterSpacing: '.5px',
+      flexShrink: 0,
+      boxShadow: lg ? '0 8px 28px rgba(13,148,136,.28)' : 'none'
+    }
+  }, "VOA");
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 components/layout/AppHeader.jsx
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const AppHeader = ({ session, onLogout }) => (
-  <div className="header">
-    <div className="brand">
-      <BrandLogo size="sm" />
-      <span className="brand-name">CollectPro</span>
-      <span className="brand-role">EXECUTIVE</span>
-    </div>
-    <div className="hdr-right">
-      <span className="city-badge">{session.city}</span>
-      <span className="staff-badge">{Utils.firstName(session.staffName)}</span>
-      <button className="logout-btn" onClick={onLogout}>✕</button>
-    </div>
-  </div>
-);
+const AppHeader = ({
+  session,
+  onLogout
+}) => /*#__PURE__*/React.createElement("div", {
+  className: "header"
+}, /*#__PURE__*/React.createElement("div", {
+  className: "brand"
+}, /*#__PURE__*/React.createElement(BrandLogo, {
+  size: "sm"
+}), /*#__PURE__*/React.createElement("span", {
+  className: "brand-name"
+}, "CollectPro"), /*#__PURE__*/React.createElement("span", {
+  className: "brand-role"
+}, "EXECUTIVE")), /*#__PURE__*/React.createElement("div", {
+  className: "hdr-right"
+}, /*#__PURE__*/React.createElement("span", {
+  className: "city-badge"
+}, session.city), /*#__PURE__*/React.createElement("span", {
+  className: "staff-badge"
+}, Utils.firstName(session.staffName)), /*#__PURE__*/React.createElement("button", {
+  className: "logout-btn",
+  onClick: onLogout
+}, "\u2715")));
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 components/layout/BottomNav.jsx
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const BottomNav = ({ active, onChange }) => (
-  <div className="bnav">
-    {NAV_ITEMS.map(n => (
-      <button key={n.id} className={`ni${active===n.id?' on':''}`} onClick={() => onChange(n.id)}>
-        <span className="ico">{n.icon}</span>
-        {n.label}
-      </button>
-    ))}
-  </div>
-);
+const BottomNav = ({
+  active,
+  onChange
+}) => /*#__PURE__*/React.createElement("div", {
+  className: "bnav"
+}, NAV_ITEMS.map(n => /*#__PURE__*/React.createElement("button", {
+  key: n.id,
+  className: `ni${active === n.id ? ' on' : ''}`,
+  onClick: () => onChange(n.id)
+}, /*#__PURE__*/React.createElement("span", {
+  className: "ico"
+}, n.icon), n.label)));
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 components/auth/SessionCard.jsx
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const SessionCard = ({ session }) => (
-  <div className="session-card">
-    <div style={{ fontFamily:'var(--fh)', fontSize:13, fontWeight:700, marginBottom:12, display:'flex', alignItems:'center', gap:6 }}>
-      <span>🔐</span> Active Session
-    </div>
-    {[
-      ['Staff ID',  session.staffId],
-      ['Name',      session.staffName],
-      ['Role',      session.role],
-      ['City',      session.city],
-      ['Client',    session.clientId],
-    ].map(([k,v]) => (
-      <div key={k} className="session-row">
-        <span className="session-label">{k}</span>
-        <span className="session-value">{v}</span>
-      </div>
-    ))}
-    <div className="session-row">
-      <span className="session-label">Token</span>
-      <span className="token-active">
-        <span className="token-dot" /> Active · auto-refresh 25 min
-      </span>
-    </div>
-  </div>
-);
+const SessionCard = ({
+  session
+}) => /*#__PURE__*/React.createElement("div", {
+  className: "session-card"
+}, /*#__PURE__*/React.createElement("div", {
+  style: {
+    fontFamily: 'var(--fh)',
+    fontSize: 13,
+    fontWeight: 700,
+    marginBottom: 12,
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6
+  }
+}, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDD10"), " Active Session"), [['Staff ID', session.staffId], ['Name', session.staffName], ['Role', session.role], ['City', session.city], ['Client', session.clientId]].map(([k, v]) => /*#__PURE__*/React.createElement("div", {
+  key: k,
+  className: "session-row"
+}, /*#__PURE__*/React.createElement("span", {
+  className: "session-label"
+}, k), /*#__PURE__*/React.createElement("span", {
+  className: "session-value"
+}, v))), /*#__PURE__*/React.createElement("div", {
+  className: "session-row"
+}, /*#__PURE__*/React.createElement("span", {
+  className: "session-label"
+}, "Token"), /*#__PURE__*/React.createElement("span", {
+  className: "token-active"
+}, /*#__PURE__*/React.createElement("span", {
+  className: "token-dot"
+}), " Active \xB7 auto-refresh 25 min")));
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 app/exec/dashboard/page.jsx — DashboardPage
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const DashboardPage = ({ session, showToast, onTabChange }) => {
-  const [dash,setDash]   = useState(null);
-  const [loading,setLoading] = useState(true);
-  useEffect(()=>{
+const DashboardPage = ({
+  session,
+  showToast,
+  onTabChange
+}) => {
+  const [dash, setDash] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
     // exec_init returns dashboard + accounts in one call
-    Api.get({action:'exec_init',token:session.token,staffId:session.staffId,city:session.city})
-      .then(d=>{
-        setDash(d.dashboard || d);
-      })
-      .catch(()=>{
-        // fallback
-        Api.get({action:'get_exec_dashboard',token:session.token,staffId:session.staffId,city:session.city})
-          .then(d=>setDash(d)).catch(()=>{});
-      })
-      .finally(()=>setLoading(false));
-  },[]);
-  const vals = { assigned:dash?.totalAssigned, today:dash?.apptToday, collected:dash?.collectedMTD, pending:dash?.totalAssigned };
-  return (
-    <div className="dash-wrap">
-      <div className="dash-greeting">{Utils.getGreeting()}, {Utils.firstName(session.staffName)} 👋</div>
-      <div className="dash-date">{Utils.getDateStr()}</div>
-      <div className="dash-cards">
-        {STAT_CARDS.map(c=>(
-          <div key={c.id} className={`dash-card ${c.cls}`} onClick={()=>onTabChange&&onTabChange('visits')} style={{cursor:'pointer'}}>
-            <div className="dash-card-icon">{c.icon}</div>
-            <div className="dash-card-val">{loading?<div style={{width:32,height:28}} className="skeleton"/>:vals[c.id]??'—'}</div>
-            <div className="dash-card-lbl">{c.label}</div>
-          </div>
-        ))}
-      </div>
-      {dash?.apptToday>0&&(
-        <div style={{background:'var(--accent-lt)',border:'1px solid rgba(13,148,136,.2)',borderRadius:'var(--r)',padding:'12px 14px',marginTop:4,fontSize:13,color:'var(--accent)',fontWeight:600,display:'flex',alignItems:'center',gap:8}}>
-          📅 {dash.apptToday} appointment{dash.apptToday>1?'s':''} scheduled today
-        </div>
-      )}
-    </div>
-  );
+    Api.get({
+      action: 'exec_init',
+      token: session.token,
+      staffId: session.staffId,
+      city: session.city
+    }).then(d => {
+      setDash(d.dashboard || d);
+    }).catch(() => {
+      // fallback
+      Api.get({
+        action: 'get_exec_dashboard',
+        token: session.token,
+        staffId: session.staffId,
+        city: session.city
+      }).then(d => setDash(d)).catch(() => {});
+    }).finally(() => setLoading(false));
+  }, []);
+  const vals = {
+    assigned: dash?.totalAssigned,
+    today: dash?.apptToday,
+    collected: dash?.collectedMTD,
+    pending: dash?.totalAssigned
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "dash-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "dash-greeting"
+  }, Utils.getGreeting(), ", ", Utils.firstName(session.staffName), " \uD83D\uDC4B"), /*#__PURE__*/React.createElement("div", {
+    className: "dash-date"
+  }, Utils.getDateStr()), /*#__PURE__*/React.createElement("div", {
+    className: "dash-cards"
+  }, STAT_CARDS.map(c => /*#__PURE__*/React.createElement("div", {
+    key: c.id,
+    className: `dash-card ${c.cls}`,
+    onClick: () => onTabChange && onTabChange('visits'),
+    style: {
+      cursor: 'pointer'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "dash-card-icon"
+  }, c.icon), /*#__PURE__*/React.createElement("div", {
+    className: "dash-card-val"
+  }, loading ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 32,
+      height: 28
+    },
+    className: "skeleton"
+  }) : vals[c.id] ?? '—'), /*#__PURE__*/React.createElement("div", {
+    className: "dash-card-lbl"
+  }, c.label)))), dash?.apptToday > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--accent-lt)',
+      border: '1px solid rgba(13,148,136,.2)',
+      borderRadius: 'var(--r)',
+      padding: '12px 14px',
+      marginTop: 4,
+      fontSize: 13,
+      color: 'var(--accent)',
+      fontWeight: 600,
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8
+    }
+  }, "\uD83D\uDCC5 ", dash.apptToday, " appointment", dash.apptToday > 1 ? 's' : '', " scheduled today"));
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  VISIT OUTCOMES
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const VISIT_GROUPS = [
-  { title:'✅ Successful',  color:'teal',   items:[
-    { label:'✅ Collected',      value:'Collected',     needsDate:false },
-  ]},
-  { title:'Not Available',  color:'amber',  items:[
-    { label:'🏠 Not Home',       value:'Not Home',      needsDate:false },
-    { label:'📅 Rescheduled',    value:'Rescheduled',   needsDate:true  },
-    { label:'✈️ Out of Station', value:'Out of Station',needsDate:false },
-  ]},
-  { title:'Issues',         color:'purple', items:[
-    { label:'💰 Refund Issue',   value:'Refund Issue',  needsDate:false },
-    { label:'🔌 Reconnection',   value:'Reconnection',  needsDate:false },
-    { label:'📧 Mail Confirm',   value:'Mail Confirmation',needsDate:false},
-    { label:'📦 Junction Box',   value:'Junction Box Issue',needsDate:false},
-    { label:'📍 Addr Change',    value:'Address Change',needsDate:false },
-  ]},
-  { title:'Non Recoverable',color:'red',    items:[
-    { label:'❌ Wrong Number',   value:'Wrong Number',  needsDate:false },
-    { label:'🏚️ Addr Not Found', value:'Address Not Found',needsDate:false},
-    { label:'🏠 Not Willing',    value:'Not Willing',   needsDate:false },
-  ]},
-];
-const ALL_VISIT_OUTCOMES = VISIT_GROUPS.flatMap(g=>g.items);
+const VISIT_GROUPS = [{
+  title: '✅ Successful',
+  color: 'teal',
+  items: [{
+    label: '✅ Collected',
+    value: 'Collected',
+    needsDate: false
+  }]
+}, {
+  title: 'Not Available',
+  color: 'amber',
+  items: [{
+    label: '🏠 Not Home',
+    value: 'Not Home',
+    needsDate: false
+  }, {
+    label: '📅 Rescheduled',
+    value: 'Rescheduled',
+    needsDate: true
+  }, {
+    label: '✈️ Out of Station',
+    value: 'Out of Station',
+    needsDate: false
+  }]
+}, {
+  title: 'Issues',
+  color: 'purple',
+  items: [{
+    label: '💰 Refund Issue',
+    value: 'Refund Issue',
+    needsDate: false
+  }, {
+    label: '🔌 Reconnection',
+    value: 'Reconnection',
+    needsDate: false
+  }, {
+    label: '📧 Mail Confirm',
+    value: 'Mail Confirmation',
+    needsDate: false
+  }, {
+    label: '📦 Junction Box',
+    value: 'Junction Box Issue',
+    needsDate: false
+  }, {
+    label: '📍 Addr Change',
+    value: 'Address Change',
+    needsDate: false
+  }]
+}, {
+  title: 'Non Recoverable',
+  color: 'red',
+  items: [{
+    label: '❌ Wrong Number',
+    value: 'Wrong Number',
+    needsDate: false
+  }, {
+    label: '🏚️ Addr Not Found',
+    value: 'Address Not Found',
+    needsDate: false
+  }, {
+    label: '🏠 Not Willing',
+    value: 'Not Willing',
+    needsDate: false
+  }]
+}];
+const ALL_VISIT_OUTCOMES = VISIT_GROUPS.flatMap(g => g.items);
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  LOG VISIT SHEET
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const LogVisitSheet = ({ account, session, onClose, onSuccess, showToast }) => {
-  const [outcome,  setOutcome]  = useState('');
-  const [remark,   setRemark]   = useState('');
+const LogVisitSheet = ({
+  account,
+  session,
+  onClose,
+  onSuccess,
+  showToast
+}) => {
+  const [outcome, setOutcome] = useState('');
+  const [remark, setRemark] = useState('');
   const [apptDate, setApptDate] = useState(Utils.tomorrowStr());
-  const [loading,  setLoading]  = useState(false);
-  const selOut = ALL_VISIT_OUTCOMES.find(o=>o.value===outcome);
+  const [loading, setLoading] = useState(false);
+  const selOut = ALL_VISIT_OUTCOMES.find(o => o.value === outcome);
   const needsDate = selOut?.needsDate;
-  const isCollected = outcome==='Collected';
-
-  const getSelClass = (g) => ({
-    '✅ Successful':'sel-teal','Not Available':'sel-amber',
-    'Issues':'sel-purple','Non Recoverable':'sel-red'
-  }[g]||'sel-teal');
-
+  const isCollected = outcome === 'Collected';
+  const getSelClass = g => ({
+    '✅ Successful': 'sel-teal',
+    'Not Available': 'sel-amber',
+    'Issues': 'sel-purple',
+    'Non Recoverable': 'sel-red'
+  })[g] || 'sel-teal';
   const handleSubmit = async () => {
-    if(!outcome){showToast('Select an outcome','error');return;}
-    if(needsDate&&!apptDate){showToast('Select new appointment date','error');return;}
+    if (!outcome) {
+      showToast('Select an outcome', 'error');
+      return;
+    }
+    if (needsDate && !apptDate) {
+      showToast('Select new appointment date', 'error');
+      return;
+    }
     setLoading(true);
+    window._cpOptimisticRemove && window._cpOptimisticRemove(account.accountNo);
     try {
-      // log_visit_and_refresh: logs + returns fresh queue in 1 call
       const result = await Api.post({
-        action:'log_visit_and_refresh', token:session.token,
-        city:session.city, staffId:session.staffId,
-        accountNo:account.accountNo, outcome,
-        execRemark:remark, newApptDate:needsDate?apptDate:''
+        action: 'log_visit_and_refresh',
+        token: session.token,
+        city: session.city,
+        staffId: session.staffId,
+        accountNo: account.accountNo,
+        outcome,
+        execRemark: remark,
+        newApptDate: needsDate ? apptDate : ''
       });
-      onSuccess(account.name+' → '+outcome+(isCollected?' ✅':''), result?.accounts);
+      onSuccess(account.name + ' → ' + outcome + (isCollected ? ' ✅' : ''), result?.accounts);
       onClose();
-    } catch(e){showToast(e.message,'error');}
-    finally{setLoading(false);}
+    } catch (e) {
+      window._cpOptimisticRestore && window._cpOptimisticRestore(account.accountNo);
+      showToast(e.message, 'error');
+    } finally {
+      setLoading(false);
+    }
   };
-
-  return (
-    <div className="overlay" onClick={e=>e.target===e.currentTarget&&onClose()}>
-      <div className="sheet">
-        <div className="sh-handle"/>
-        <div className="sh-title">Log Visit Outcome</div>
-        <div className="sh-sub">Record the result of your field visit</div>
-        <div className="sh-cust">
-          <div className="sh-cust-name">{account.name}</div>
-          <div className="sh-cust-acc">📞 {account.mobile} · {account.accountNo}</div>
-        </div>
-        {VISIT_GROUPS.map(g=>(
-          <div key={g.title} style={{marginBottom:12}}>
-            <div className="og-title">{g.title}</div>
-            <div className="og-grid">
-              {g.items.map(item=>(
-                <button key={item.value}
-                  className={`ob${outcome===item.value?' '+getSelClass(g.title):''}`}
-                  onClick={()=>setOutcome(item.value)}>
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        ))}
-        {needsDate&&(
-          <>
-            <div className="sl-label" style={{marginBottom:7}}>New Appointment Date</div>
-            <input type="date" className="dt-inp" value={apptDate}
-              min={Utils.todayStr()} onChange={e=>setApptDate(e.target.value)}/>
-          </>
-        )}
-        <div className="sl-label" style={{marginBottom:7}}>Visit Remark</div>
-        <textarea className="rm-ta" value={remark}
-          onChange={e=>setRemark(e.target.value)}
-          placeholder={isCollected?'Collection confirmed. Router received.':'Add notes about this visit…'}
-          rows={3}/>
-        <button className="sub-btn" onClick={handleSubmit} disabled={!outcome||loading}>
-          {loading?'Saving…':isCollected?'✅ Confirm Collection':'✅ Submit Outcome'}
-        </button>
-        <div className="cnl-lnk" onClick={onClose}>Cancel</div>
-      </div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "overlay",
+    onClick: e => e.target === e.currentTarget && onClose()
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sheet"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sh-handle"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "sh-title"
+  }, "Log Visit Outcome"), /*#__PURE__*/React.createElement("div", {
+    className: "sh-sub"
+  }, "Record the result of your field visit"), /*#__PURE__*/React.createElement("div", {
+    className: "sh-cust"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sh-cust-name"
+  }, account.name), /*#__PURE__*/React.createElement("div", {
+    className: "sh-cust-acc"
+  }, "\uD83D\uDCDE ", account.mobile, " \xB7 ", account.accountNo)), VISIT_GROUPS.map(g => /*#__PURE__*/React.createElement("div", {
+    key: g.title,
+    style: {
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "og-title"
+  }, g.title), /*#__PURE__*/React.createElement("div", {
+    className: "og-grid"
+  }, g.items.map(item => /*#__PURE__*/React.createElement("button", {
+    key: item.value,
+    className: `ob${outcome === item.value ? ' ' + getSelClass(g.title) : ''}`,
+    onClick: () => setOutcome(item.value)
+  }, item.label))))), needsDate && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "sl-label",
+    style: {
+      marginBottom: 7
+    }
+  }, "New Appointment Date"), /*#__PURE__*/React.createElement("input", {
+    type: "date",
+    className: "dt-inp",
+    value: apptDate,
+    min: Utils.todayStr(),
+    onChange: e => setApptDate(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "sl-label",
+    style: {
+      marginBottom: 7
+    }
+  }, "Visit Remark"), /*#__PURE__*/React.createElement("textarea", {
+    className: "rm-ta",
+    value: remark,
+    onChange: e => setRemark(e.target.value),
+    placeholder: isCollected ? 'Collection confirmed. Router received.' : 'Add notes about this visit…',
+    rows: 3
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "sub-btn",
+    onClick: handleSubmit,
+    disabled: !outcome || loading
+  }, loading ? 'Saving…' : isCollected ? '✅ Confirm Collection' : '✅ Submit Outcome'), /*#__PURE__*/React.createElement("div", {
+    className: "cnl-lnk",
+    onClick: onClose
+  }, "Cancel")));
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  VISIT CARD
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const VisitCard = ({ account, onLog }) => {
-  const [expanded,setExpanded] = useState(false);
+const VisitCard = ({
+  account,
+  onLog
+}) => {
+  const [expanded, setExpanded] = useState(false);
   const today = Utils.todayStr();
-  const isToday   = account.apptDate === today;
+  const isToday = account.apptDate === today;
   const isOverdue = account.apptDate && account.apptDate < today;
-  const cls = isOverdue?'overdue':isToday?'today':'future';
-
-  const call = () => { window.location.href='tel:'+account.mobile.replace(/\D/g,''); };
-  const wa   = () => {
-    const msg=`Hi, I'm from VOA field team visiting for ACT router collection. Account: ${account.accountNo}. I'll be arriving shortly. Please be available.`;
-    window.open(Utils.buildWALink(account.mobile,msg),'_blank');
+  const cls = isOverdue ? 'overdue' : isToday ? 'today' : 'future';
+  const call = () => {
+    window.location.href = 'tel:' + account.mobile.replace(/\D/g, '');
   };
-
-  return (
-    <div className={`vc ${cls}`} onClick={()=>setExpanded(e=>!e)}>
-      <div className="vc-top">
-        <div>
-          <div className="vc-name">{account.name}</div>
-          <div className="vc-no">{account.accountNo}</div>
-        </div>
-        <span className={`vc-badge ${account.status==='APPT_FIXED'?'vb-appt':account.status==='RESCHEDULED'?'vb-reschedule':'vb-nr'}`}>
-          {STATUS_LABELS[account.status]||account.status}
-        </span>
-      </div>
-      <div className="vc-row"><span>📞</span><span style={{fontFamily:'var(--fm)',color:'var(--green)',fontWeight:600}}>{account.mobile}</span></div>
-      {expanded&&(
-        <>
-          <div className="vc-row"><span>📍</span><span>{account.address}, {account.area}</span></div>
-          {account.srNumber&&<div className="vc-row"><span>🎫</span><span>SR: {account.srNumber}</span></div>}
-          {account.tcRemark&&<div className="vc-row" style={{color:'var(--text3)'}}><span>💬</span><span>TC: {account.tcRemark}</span></div>}
-        </>
-      )}
-      {account.apptDate&&(
-        <div className={`vc-appt-strip${isOverdue?' overdue':''}`}>
-          📅 {isToday?'Today':isOverdue?'⚠️ Overdue: ':''}{account.apptDate}
-        </div>
-      )}
-      <div className="vc-actions" onClick={e=>e.stopPropagation()}>
-        <button className="vca call" onClick={call}>📞 Call</button>
-        <button className="vca wa"   onClick={wa  }>💬 WA</button>
-        <button className="vca log"  onClick={()=>onLog(account)}>✏️ Log Visit</button>
-      </div>
-    </div>
-  );
+  const wa = () => {
+    const msg = `Hi, I'm from VOA field team visiting for ACT router collection. Account: ${account.accountNo}. I'll be arriving shortly. Please be available.`;
+    window.open(Utils.buildWALink(account.mobile, msg), '_blank');
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: `vc ${cls}`,
+    onClick: () => setExpanded(e => !e)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "vc-top"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "vc-name"
+  }, account.name), /*#__PURE__*/React.createElement("div", {
+    className: "vc-no"
+  }, account.accountNo)), /*#__PURE__*/React.createElement("span", {
+    className: `vc-badge ${account.status === 'APPT_FIXED' ? 'vb-appt' : account.status === 'RESCHEDULED' ? 'vb-reschedule' : 'vb-nr'}`
+  }, STATUS_LABELS[account.status] || account.status)), /*#__PURE__*/React.createElement("div", {
+    className: "vc-row"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCDE"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--fm)',
+      color: 'var(--green)',
+      fontWeight: 600
+    }
+  }, account.mobile)), expanded && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "vc-row"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCCD"), /*#__PURE__*/React.createElement("span", null, account.address, ", ", account.area)), account.srNumber && /*#__PURE__*/React.createElement("div", {
+    className: "vc-row"
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83C\uDFAB"), /*#__PURE__*/React.createElement("span", null, "SR: ", account.srNumber)), account.tcRemark && /*#__PURE__*/React.createElement("div", {
+    className: "vc-row",
+    style: {
+      color: 'var(--text3)'
+    }
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCAC"), /*#__PURE__*/React.createElement("span", null, "TC: ", account.tcRemark))), account.apptDate && /*#__PURE__*/React.createElement("div", {
+    className: `vc-appt-strip${isOverdue ? ' overdue' : ''}`
+  }, "\uD83D\uDCC5 ", isToday ? 'Today' : isOverdue ? '⚠️ Overdue: ' : '', account.apptDate), /*#__PURE__*/React.createElement("div", {
+    className: "vc-actions",
+    onClick: e => e.stopPropagation()
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "vca call",
+    onClick: call
+  }, "\uD83D\uDCDE Call"), /*#__PURE__*/React.createElement("button", {
+    className: "vca wa",
+    onClick: wa
+  }, "\uD83D\uDCAC WA"), /*#__PURE__*/React.createElement("button", {
+    className: "vca log",
+    onClick: () => onLog(account)
+  }, "\u270F\uFE0F Log Visit")));
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  VISITS PAGE
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const VISIT_FILTERS = [
-  {label:'All',value:null},{label:'Appt Fixed',value:'APPT_FIXED'},
-  {label:'Rescheduled',value:'RESCHEDULED'},{label:'Not Visited',value:'NOT_VISITED'},
-];
-
-const VisitsPage = ({ session, showToast }) => {
-  const [accounts,setAccounts] = useState([]);
-  const [loading, setLoading]  = useState(true);
-  const [filter,  setFilter]   = useState(null);
-  const [logTarget,setLogTarget]= useState(null);
-
-  const load = useCallback(async(prefetchedAccounts)=>{
+const VISIT_FILTERS = [{
+  label: 'All',
+  value: null
+}, {
+  label: 'Appt Fixed',
+  value: 'APPT_FIXED'
+}, {
+  label: 'Rescheduled',
+  value: 'RESCHEDULED'
+}, {
+  label: 'Not Visited',
+  value: 'NOT_VISITED'
+}];
+const VisitsPage = ({
+  session,
+  showToast
+}) => {
+  const [accounts, setAccounts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState(null);
+  const [logTarget, setLogTarget] = useState(null);
+  const load = useCallback(async prefetchedAccounts => {
     // If exec_init already loaded accounts, use them directly (no extra call)
     if (prefetchedAccounts && Array.isArray(prefetchedAccounts)) {
       setAccounts(prefetchedAccounts);
@@ -826,232 +1092,418 @@ const VisitsPage = ({ session, showToast }) => {
     setLoading(true);
     try {
       // Try exec_init (returns accounts + dashboard in 1 call)
-      const d=await Api.get({action:'exec_init',token:session.token,staffId:session.staffId,city:session.city});
+      const d = await Api.get({
+        action: 'exec_init',
+        token: session.token,
+        staffId: session.staffId,
+        city: session.city
+      });
       const accounts = d.accounts || d;
-      setAccounts(Array.isArray(accounts)?accounts:[]);
-    } catch(e){
+      setAccounts(Array.isArray(accounts) ? accounts : []);
+    } catch (e) {
       // Fallback to individual call
       try {
-        const d=await Api.get({action:'get_exec_accounts',token:session.token,staffId:session.staffId,city:session.city});
-        setAccounts(Array.isArray(d)?d:[]);
-      } catch(e2){showToast(e2.message,'error');}
+        const d = await Api.get({
+          action: 'get_exec_accounts',
+          token: session.token,
+          staffId: session.staffId,
+          city: session.city
+        });
+        setAccounts(Array.isArray(d) ? d : []);
+      } catch (e2) {
+        showToast(e2.message, 'error');
+      }
+    } finally {
+      setLoading(false);
     }
-    finally{setLoading(false);}
-  },[session]);
-
-  useEffect(()=>{load();},[load]);
-  const filtered = useMemo(()=>filter?accounts.filter(a=>a.status===filter):accounts,[accounts,filter]);
-
-  return (
-    <div>
-      <div className="list-hdr">
-        <div className="list-hdr-top">
-          <div className="list-ttl">My Visits <span style={{color:'var(--text3)',fontSize:13}}>({filtered.length})</span></div>
-          <button className="rfr-btn" onClick={load}>↻ Refresh</button>
-        </div>
-        <div className="fchips">
-          {VISIT_FILTERS.map(f=>(
-            <button key={f.label} className={`fchip${filter===f.value?' on':''}`}
-              onClick={()=>setFilter(f.value)}>{f.label}</button>
-          ))}
-        </div>
-      </div>
-      <div style={{paddingTop:10}}>
-        {loading?[1,2,3].map(i=><div key={i} style={{height:120,margin:'0 14px 10px',borderRadius:'var(--r)'}} className="skeleton"/>):
-         filtered.length===0?
-           <div className="coming-soon">
-             <div className="coming-soon-icon">📭</div>
-             <div className="coming-soon-title">{filter?'No accounts with this status':'No visits assigned'}</div>
-             <div className="coming-soon-sub">Field visits will appear here after telecallers fix appointments.</div>
-           </div>:
-           filtered.map(a=><VisitCard key={a.accountNo} account={a} onLog={setLogTarget}/>)
-        }
-      </div>
-      {logTarget&&<LogVisitSheet account={logTarget} session={session}
-        onClose={()=>setLogTarget(null)} showToast={showToast}
-        onSuccess={(msg, freshAccounts)=>{showToast(msg,'success');freshAccounts?setAccounts(freshAccounts):load();}}/>}
-    </div>
-  );
+  }, [session]);
+  const [optimisticRemoved, setOptimisticRemoved] = useState([]);
+  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    const onRemove  = e => setOptimisticRemoved(p => [...p, e.detail.accountNo]);
+    const onRestore = e => setOptimisticRemoved(p => p.filter(n => n !== e.detail.accountNo));
+    window.addEventListener('cp:optimistic_remove', onRemove);
+    window.addEventListener('cp:optimistic_restore', onRestore);
+    return () => {
+      window.removeEventListener('cp:optimistic_remove', onRemove);
+      window.removeEventListener('cp:optimistic_restore', onRestore);
+    };
+  }, []);
+  const filtered = useMemo(() => {
+    const base = filter ? accounts.filter(a => a.status === filter) : accounts;
+    return base.filter(a => !optimisticRemoved.includes(a.accountNo));
+  }, [accounts, filter, optimisticRemoved]);
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "list-hdr"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "list-hdr-top"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "list-ttl"
+  }, "My Visits ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--text3)',
+      fontSize: 13
+    }
+  }, "(", filtered.length, ")")), /*#__PURE__*/React.createElement("button", {
+    className: "rfr-btn",
+    onClick: load
+  }, "\u21BB Refresh")), /*#__PURE__*/React.createElement("div", {
+    className: "fchips"
+  }, VISIT_FILTERS.map(f => /*#__PURE__*/React.createElement("button", {
+    key: f.label,
+    className: `fchip${filter === f.value ? ' on' : ''}`,
+    onClick: () => setFilter(f.value)
+  }, f.label)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingTop: 10
+    }
+  }, loading ? [1, 2, 3].map(i => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      height: 120,
+      margin: '0 14px 10px',
+      borderRadius: 'var(--r)'
+    },
+    className: "skeleton"
+  })) : filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "coming-soon"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "coming-soon-icon"
+  }, "\uD83D\uDCED"), /*#__PURE__*/React.createElement("div", {
+    className: "coming-soon-title"
+  }, filter ? 'No accounts with this status' : 'No visits assigned'), /*#__PURE__*/React.createElement("div", {
+    className: "coming-soon-sub"
+  }, "Field visits will appear here after telecallers fix appointments.")) : filtered.map(a => /*#__PURE__*/React.createElement(VisitCard, {
+    key: a.accountNo,
+    account: a,
+    onLog: setLogTarget
+  }))), logTarget && /*#__PURE__*/React.createElement(LogVisitSheet, {
+    account: logTarget,
+    session: session,
+    onClose: () => setLogTarget(null),
+    showToast: showToast,
+    onSuccess: (msg, freshAccounts) => {
+      showToast(msg, 'success');
+      freshAccounts ? setAccounts(freshAccounts) : load();
+    }
+  }));
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  STORE PAGE
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const StorePage = ({ session, showToast }) => {
-  const [accountNo,setAccountNo] = useState('');
-  const [remark,   setRemark]    = useState('');
-  const [loading,  setLoading]   = useState(false);
-  const [submitted,setSubmitted] = useState([]);
-
-  const handleSubmit = async() => {
-    if(!accountNo.trim()){showToast('Enter Account Number','error');return;}
+const StorePage = ({
+  session,
+  showToast
+}) => {
+  const [accountNo, setAccountNo] = useState('');
+  const [remark, setRemark] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState([]);
+  const handleSubmit = async () => {
+    if (!accountNo.trim()) {
+      showToast('Enter Account Number', 'error');
+      return;
+    }
     setLoading(true);
     try {
-      const d=await Api.post({
-        action:'submit_store', token:session.token,
-        staffId:session.staffId, city:session.city,
-        accountNo:accountNo.trim(), remark, batchNo:''
+      const d = await Api.post({
+        action: 'submit_store',
+        token: session.token,
+        staffId: session.staffId,
+        city: session.city,
+        accountNo: accountNo.trim(),
+        remark,
+        batchNo: ''
       });
-      showToast('Store submission recorded — '+d.submissionId,'success');
-      setSubmitted(s=>[{accountNo:accountNo.trim(),id:d.submissionId,time:new Date().toLocaleTimeString('en-IN')},...s.slice(0,4)]);
-      setAccountNo(''); setRemark('');
-    } catch(e){showToast(e.message,'error');}
-    finally{setLoading(false);}
+      showToast('Store submission recorded — ' + d.submissionId, 'success');
+      setSubmitted(s => [{
+        accountNo: accountNo.trim(),
+        id: d.submissionId,
+        time: new Date().toLocaleTimeString('en-IN')
+      }, ...s.slice(0, 4)]);
+      setAccountNo('');
+      setRemark('');
+    } catch (e) {
+      showToast(e.message, 'error');
+    } finally {
+      setLoading(false);
+    }
   };
-
-  return (
-    <div className="store-wrap">
-      <div className="store-card">
-        <div className="store-card-title">📦 Submit Router to Store</div>
-        <div style={{fontSize:12,color:'var(--text3)',marginBottom:14,lineHeight:1.5}}>
-          Record physical router handover at collection point. Fill in the account number of the collected router.
-        </div>
-        <label style={{fontSize:11,fontFamily:'var(--fm)',color:'var(--text3)',letterSpacing:'.5px',textTransform:'uppercase',display:'block',marginBottom:6}}>Account Number</label>
-        <input className="inp" value={accountNo} onChange={e=>setAccountNo(e.target.value.toUpperCase())}
-          placeholder="e.g. 108695502001" autoCapitalize="characters"/>
-        <label style={{fontSize:11,fontFamily:'var(--fm)',color:'var(--text3)',letterSpacing:'.5px',textTransform:'uppercase',display:'block',marginBottom:6}}>Remark (optional)</label>
-        <textarea className="inp" value={remark} onChange={e=>setRemark(e.target.value)}
-          placeholder="Router condition, handover notes…" rows={2} style={{resize:'none'}}/>
-        <button className="store-sub-btn" onClick={handleSubmit}
-          disabled={!accountNo.trim()||loading}>
-          {loading?'Submitting…':'📦 Submit to Store'}
-        </button>
-      </div>
-      {submitted.length>0&&(
-        <div className="store-card">
-          <div className="store-card-title">✅ Submitted This Session</div>
-          {submitted.map((s,i)=>(
-            <div key={i} className="store-history">
-              <strong>{s.accountNo}</strong> · {s.id} · {s.time}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "store-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "store-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "store-card-title"
+  }, "\uD83D\uDCE6 Submit Router to Store"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--text3)',
+      marginBottom: 14,
+      lineHeight: 1.5
+    }
+  }, "Record physical router handover at collection point. Fill in the account number of the collected router."), /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 11,
+      fontFamily: 'var(--fm)',
+      color: 'var(--text3)',
+      letterSpacing: '.5px',
+      textTransform: 'uppercase',
+      display: 'block',
+      marginBottom: 6
+    }
+  }, "Account Number"), /*#__PURE__*/React.createElement("input", {
+    className: "inp",
+    value: accountNo,
+    onChange: e => setAccountNo(e.target.value.toUpperCase()),
+    placeholder: "e.g. 108695502001",
+    autoCapitalize: "characters"
+  }), /*#__PURE__*/React.createElement("label", {
+    style: {
+      fontSize: 11,
+      fontFamily: 'var(--fm)',
+      color: 'var(--text3)',
+      letterSpacing: '.5px',
+      textTransform: 'uppercase',
+      display: 'block',
+      marginBottom: 6
+    }
+  }, "Remark (optional)"), /*#__PURE__*/React.createElement("textarea", {
+    className: "inp",
+    value: remark,
+    onChange: e => setRemark(e.target.value),
+    placeholder: "Router condition, handover notes\u2026",
+    rows: 2,
+    style: {
+      resize: 'none'
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "store-sub-btn",
+    onClick: handleSubmit,
+    disabled: !accountNo.trim() || loading
+  }, loading ? 'Submitting…' : '📦 Submit to Store')), submitted.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "store-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "store-card-title"
+  }, "\u2705 Submitted This Session"), submitted.map((s, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "store-history"
+  }, /*#__PURE__*/React.createElement("strong", null, s.accountNo), " \xB7 ", s.id, " \xB7 ", s.time))));
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  REPORT PAGE
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const ReportPage = ({ session, showToast }) => {
-  const [dashboard,setDashboard] = useState(null);
-  const [loading,  setLoading]   = useState(true);
-
-  useEffect(()=>{
-    Api.get({action:'get_exec_dashboard',token:session.token,staffId:session.staffId,city:session.city})
-      .then(d=>setDashboard(d)).catch(e=>showToast(e.message,'error'))
-      .finally(()=>setLoading(false));
-  },[]);
-
+const ReportPage = ({
+  session,
+  showToast
+}) => {
+  const [dashboard, setDashboard] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    Api.get({
+      action: 'get_exec_dashboard',
+      token: session.token,
+      staffId: session.staffId,
+      city: session.city
+    }).then(d => setDashboard(d)).catch(e => showToast(e.message, 'error')).finally(() => setLoading(false));
+  }, []);
   const download = () => {
-    showToast('Visit report downloading…','success');
-    const wb=XLSX.utils.book_new();
-    const ws=XLSX.utils.json_to_sheet([{
-      'Staff':session.staffName,'City':session.city,'Date':Utils.todayStr(),
-      'Total Assigned':dashboard?.totalAssigned||0,'Appt Today':dashboard?.apptToday||0,
-      'Visited Today':dashboard?.visitedToday||0,'MTD Collected':dashboard?.collectedMTD||0,
+    showToast('Visit report downloading…', 'success');
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet([{
+      'Staff': session.staffName,
+      'City': session.city,
+      'Date': Utils.todayStr(),
+      'Total Assigned': dashboard?.totalAssigned || 0,
+      'Appt Today': dashboard?.apptToday || 0,
+      'Visited Today': dashboard?.visitedToday || 0,
+      'MTD Collected': dashboard?.collectedMTD || 0
     }]);
-    XLSX.utils.book_append_sheet(wb,ws,'Exec Summary');
-    XLSX.writeFile(wb,'Exec_Report_'+session.staffId+'_'+Utils.todayStr()+'.xlsx');
+    XLSX.utils.book_append_sheet(wb, ws, 'Exec Summary');
+    XLSX.writeFile(wb, 'Exec_Report_' + session.staffId + '_' + Utils.todayStr() + '.xlsx');
   };
-
-  return (
-    <div>
-      <div className="rpt-hdr">
-        <div className="rpt-date">{Utils.todayStr()}</div>
-        <div className="rpt-title">Field Visit Summary</div>
-        <div className="rpt-stats">
-          <div className="rpt-stat"><div className="rpt-val">{loading?'…':dashboard?.visitedToday||0}</div><div className="rpt-lbl">Visited Today</div></div>
-          <div className="rpt-stat"><div className="rpt-val">{loading?'…':dashboard?.apptToday||0}</div><div className="rpt-lbl">Appts Today</div></div>
-          <div className="rpt-stat"><div className="rpt-val">{loading?'…':dashboard?.collectedMTD||0}</div><div className="rpt-lbl">MTD Collected</div></div>
-        </div>
-      </div>
-      <div className="rpt-section">
-        <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
-          <div style={{fontSize:12,fontWeight:700,color:'var(--text2)',letterSpacing:'.5px',textTransform:'uppercase'}}>Summary Stats</div>
-          <button className="dl-btn" onClick={download}>📥 Download</button>
-        </div>
-        {[
-          {label:'Total Assigned',val:dashboard?.totalAssigned,icon:'📋'},
-          {label:'Appts Today',   val:dashboard?.apptToday,    icon:'📅'},
-          {label:'Visited Today', val:dashboard?.visitedToday, icon:'✅'},
-          {label:'MTD Collected', val:dashboard?.collectedMTD, icon:'🏆'},
-        ].map(r=>(
-          <div key={r.label} className="rpt-row">
-            <div className="rpt-time">{r.icon}</div>
-            <div className="rpt-info">
-              <div className="rpt-aname">{r.label}</div>
-            </div>
-            <div style={{fontFamily:'var(--fm)',fontSize:18,fontWeight:500,color:'var(--accent)'}}>{loading?'…':r.val||0}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "rpt-hdr"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "rpt-date"
+  }, Utils.todayStr()), /*#__PURE__*/React.createElement("div", {
+    className: "rpt-title"
+  }, "Field Visit Summary"), /*#__PURE__*/React.createElement("div", {
+    className: "rpt-stats"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "rpt-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "rpt-val"
+  }, loading ? '…' : dashboard?.visitedToday || 0), /*#__PURE__*/React.createElement("div", {
+    className: "rpt-lbl"
+  }, "Visited Today")), /*#__PURE__*/React.createElement("div", {
+    className: "rpt-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "rpt-val"
+  }, loading ? '…' : dashboard?.apptToday || 0), /*#__PURE__*/React.createElement("div", {
+    className: "rpt-lbl"
+  }, "Appts Today")), /*#__PURE__*/React.createElement("div", {
+    className: "rpt-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "rpt-val"
+  }, loading ? '…' : dashboard?.collectedMTD || 0), /*#__PURE__*/React.createElement("div", {
+    className: "rpt-lbl"
+  }, "MTD Collected")))), /*#__PURE__*/React.createElement("div", {
+    className: "rpt-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      fontWeight: 700,
+      color: 'var(--text2)',
+      letterSpacing: '.5px',
+      textTransform: 'uppercase'
+    }
+  }, "Summary Stats"), /*#__PURE__*/React.createElement("button", {
+    className: "dl-btn",
+    onClick: download
+  }, "\uD83D\uDCE5 Download")), [{
+    label: 'Total Assigned',
+    val: dashboard?.totalAssigned,
+    icon: '📋'
+  }, {
+    label: 'Appts Today',
+    val: dashboard?.apptToday,
+    icon: '📅'
+  }, {
+    label: 'Visited Today',
+    val: dashboard?.visitedToday,
+    icon: '✅'
+  }, {
+    label: 'MTD Collected',
+    val: dashboard?.collectedMTD,
+    icon: '🏆'
+  }].map(r => /*#__PURE__*/React.createElement("div", {
+    key: r.label,
+    className: "rpt-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "rpt-time"
+  }, r.icon), /*#__PURE__*/React.createElement("div", {
+    className: "rpt-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "rpt-aname"
+  }, r.label)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--fm)',
+      fontSize: 18,
+      fontWeight: 500,
+      color: 'var(--accent)'
+    }
+  }, loading ? '…' : r.val || 0)))));
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 app/(authenticated)/layout.jsx — AppShell
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const AppShell = ({ session, onLogout }) => {
+const AppShell = ({
+  session,
+  onLogout
+}) => {
   const [activePage, setActivePage] = useState('dash');
-  const { toast, showToast, hideToast } = useToast();
-
+  const {
+    toast,
+    showToast,
+    hideToast
+  } = useToast();
   const handleLogout = useCallback(() => {
     SessionStore.clear();
     onLogout();
   }, [onLogout]);
-
   useTokenRefresh(session, handleLogout);
-
   const PAGE_MAP = {
-    dash:   <DashboardPage session={session} showToast={showToast} onTabChange={setActivePage} />,
-    visits: <VisitsPage session={session} showToast={showToast} />,
-    store:  <StorePage  session={session} showToast={showToast} />,
-    report: <ReportPage session={session} showToast={showToast} />,
+    dash: /*#__PURE__*/React.createElement(DashboardPage, {
+      session: session,
+      showToast: showToast,
+      onTabChange: setActivePage
+    }),
+    visits: /*#__PURE__*/React.createElement(VisitsPage, {
+      session: session,
+      showToast: showToast
+    }),
+    store: /*#__PURE__*/React.createElement(StorePage, {
+      session: session,
+      showToast: showToast
+    }),
+    report: /*#__PURE__*/React.createElement(ReportPage, {
+      session: session,
+      showToast: showToast
+    })
   };
-
-  return (
-    <div className="app">
-      <AppHeader session={session} onLogout={handleLogout} />
-      <div className="main-content">
-        {NAV_ITEMS.map(n => (
-          <div key={n.id} className={`page${activePage===n.id?' on':''}`}>
-            {PAGE_MAP[n.id]}
-          </div>
-        ))}
-      </div>
-      <BottomNav active={activePage} onChange={setActivePage} />
-      {toast && <Toast msg={toast.msg} type={toast.type} onDone={hideToast} />}
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "app"
+  }, /*#__PURE__*/React.createElement(AppHeader, {
+    session: session,
+    onLogout: handleLogout
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "main-content"
+  }, NAV_ITEMS.map(n => /*#__PURE__*/React.createElement("div", {
+    key: n.id,
+    className: `page${activePage === n.id ? ' on' : ''}`
+  }, PAGE_MAP[n.id]))), /*#__PURE__*/React.createElement(BottomNav, {
+    active: activePage,
+    onChange: setActivePage
+  }), toast && /*#__PURE__*/React.createElement(Toast, {
+    msg: toast.msg,
+    type: toast.type,
+    onDone: hideToast
+  }));
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 components/auth/LoginCard.jsx
 //  KEY DIFFERENCE FROM TC APP: city dropdown added
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const LoginCard = ({ onLogin }) => {
-  const [city,    setCity]    = useState('CBE');
+const LoginCard = ({
+  onLogin
+}) => {
+  const [city, setCity] = useState('CBE');
   const [staffId, setStaffId] = useState('');
-  const [pin,     setPin]     = useState('');
-  const [error,   setError]   = useState('');
+  const [pin, setPin] = useState('');
+  const [error, setError] = useState('');
   const [shaking, setShaking] = useState(false);
-  const { toast, showToast, hideToast } = useToast();
-
+  const {
+    toast,
+    showToast,
+    hideToast
+  } = useToast();
   const shake = useCallback(() => {
-    setShaking(true); setTimeout(() => setShaking(false), 450);
+    setShaking(true);
+    setTimeout(() => setShaking(false), 450);
   }, []);
-
-  const { login, loading } = useAuth({
+  const {
+    login,
+    loading
+  } = useAuth({
     onSuccess: onLogin,
-    onError: (msg) => { shake(); setError(msg); showToast(msg,'error'); setPin(''); }
+    onError: msg => {
+      shake();
+      setError(msg);
+      showToast(msg, 'error');
+      setPin('');
+    }
   });
-
   const handleSubmit = useCallback(() => {
-    if (!staffId.trim()) { showToast('Enter your Staff ID'); return; }
-    if (pin.length < 4)  { showToast('Enter your 4-digit PIN'); return; }
+    if (!staffId.trim()) {
+      showToast('Enter your Staff ID');
+      return;
+    }
+    if (pin.length < 4) {
+      showToast('Enter your 4-digit PIN');
+      return;
+    }
     setError('');
     login(city, staffId, pin);
   }, [city, staffId, pin, login]);
@@ -1063,112 +1515,165 @@ const LoginCard = ({ onLogin }) => {
       return () => clearTimeout(t);
     }
   }, [pin, staffId]);
-
-  return (
-    <div className="login-screen">
-      <div className={`login-card${shaking?' shake':''}`}>
-
-        {/* Brand */}
-        <div className="login-logo-wrap">
-          <BrandLogo size="lg" />
-          <div className="login-title">Executive Console</div>
-          <div className="login-sub">CollectPro · VOA Recovery Operations</div>
-          <div className="role-pill">👷 Field Executive</div>
-        </div>
-
-        {/* City dropdown — unique to Exec App */}
-        <div className="form-group">
-          <label className="form-label">City</label>
-          <div className="select-wrap">
-            <select
-              className="form-select"
-              value={city}
-              onChange={e => setCity(e.target.value)}
-              disabled={loading}
-            >
-              <option value="CBE">Coimbatore (CBE)</option>
-              <option value="CHN">Chennai (CHN)</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Staff ID */}
-        <div className="form-group">
-          <label className="form-label">Staff ID</label>
-          <input
-            className="form-input"
-            type="text"
-            value={staffId}
-            onChange={e => setStaffId(e.target.value.toUpperCase())}
-            onKeyDown={e => e.key==='Enter' && handleSubmit()}
-            placeholder="e.g. EX_001"
-            autoCapitalize="characters"
-            autoCorrect="off"
-            spellCheck={false}
-            disabled={loading}
-          />
-        </div>
-
-        {/* PIN */}
-        <div className="form-group" style={{marginBottom:8}}>
-          <label className="form-label">PIN</label>
-          <input
-            className="form-input pin-field"
-            type="password"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            maxLength={4}
-            value={pin}
-            onChange={e => setPin(Utils.sanitizePin(e.target.value))}
-            onKeyDown={e => e.key==='Enter' && handleSubmit()}
-            placeholder="• • • •"
-            disabled={loading}
-          />
-        </div>
-
-        <PinDots length={pin.length} />
-
-        <button className="btn-login" onClick={handleSubmit} disabled={loading}>
-          {loading
-            ? <><div className="spinner"/><span>Signing in...</span></>
-            : 'Sign In →'
-          }
-        </button>
-
-        {error && <div className="login-error">{error}</div>}
-      </div>
-
-      {toast && <Toast msg={toast.msg} type={toast.type} onDone={hideToast} />}
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "login-screen"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `login-card${shaking ? ' shake' : ''}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "login-logo-wrap"
+  }, /*#__PURE__*/React.createElement(BrandLogo, {
+    size: "lg"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "login-title"
+  }, "Executive Console"), /*#__PURE__*/React.createElement("div", {
+    className: "login-sub"
+  }, "CollectPro \xB7 VOA Recovery Operations"), /*#__PURE__*/React.createElement("div", {
+    className: "role-pill"
+  }, "\uD83D\uDC77 Field Executive")), /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "City"), /*#__PURE__*/React.createElement("div", {
+    className: "select-wrap"
+  }, /*#__PURE__*/React.createElement("select", {
+    className: "form-select",
+    value: city,
+    onChange: e => setCity(e.target.value),
+    disabled: loading
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "CBE"
+  }, "Coimbatore (CBE)"), /*#__PURE__*/React.createElement("option", {
+    value: "CHN"
+  }, "Chennai (CHN)")))), /*#__PURE__*/React.createElement("div", {
+    className: "form-group"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "Staff ID"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input",
+    type: "text",
+    value: staffId,
+    onChange: e => setStaffId(e.target.value.toUpperCase()),
+    onKeyDown: e => e.key === 'Enter' && handleSubmit(),
+    placeholder: "e.g. EX_001",
+    autoCapitalize: "characters",
+    autoCorrect: "off",
+    spellCheck: false,
+    disabled: loading
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "form-group",
+    style: {
+      marginBottom: 8
+    }
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "form-label"
+  }, "PIN"), /*#__PURE__*/React.createElement("input", {
+    className: "form-input pin-field",
+    type: "password",
+    inputMode: "numeric",
+    pattern: "[0-9]*",
+    maxLength: 4,
+    value: pin,
+    onChange: e => setPin(Utils.sanitizePin(e.target.value)),
+    onKeyDown: e => e.key === 'Enter' && handleSubmit(),
+    placeholder: "\u2022 \u2022 \u2022 \u2022",
+    disabled: loading
+  })), /*#__PURE__*/React.createElement(PinDots, {
+    length: pin.length
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "btn-login",
+    onClick: handleSubmit,
+    disabled: loading
+  }, loading ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "spinner"
+  }), /*#__PURE__*/React.createElement("span", null, "Signing in...")) : 'Sign In →'), error && /*#__PURE__*/React.createElement("div", {
+    className: "login-error"
+  }, error)), toast && /*#__PURE__*/React.createElement(Toast, {
+    msg: toast.msg,
+    type: toast.type,
+    onDone: hideToast
+  }));
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 app/page.jsx — Root auth gate
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const App = () => {
-  const [session,  setSession]  = useState(null);
+  const [session, setSession] = useState(null);
   const [checking, setChecking] = useState(true);
-
   useEffect(() => {
     const saved = SessionStore.load();
     if (saved) setSession(saved);
     setChecking(false);
   }, []);
-
-  if (checking) return (
-    <div className="load-overlay">
-      <div className="load-spinner"/>
-      <div className="load-text">CollectPro loading...</div>
-    </div>
-  );
-
-  return session
-    ? <AppShell session={session} onLogout={() => setSession(null)} />
-    : <LoginCard onLogin={s => setSession(s)} />;
+  if (checking) return /*#__PURE__*/React.createElement("div", {
+    className: "load-overlay"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "load-spinner"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "load-text"
+  }, "CollectPro loading..."));
+  return session ? /*#__PURE__*/React.createElement(AppShell, {
+    session: session,
+    onLogout: () => setSession(null)
+  }) : /*#__PURE__*/React.createElement(LoginCard, {
+    onLogin: s => setSession(s)
+  });
 };
+ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+//  COLLECTPRO EXEC APP — PERFORMANCE PATCHES
+//  1. TTL Cache  2. Optimistic UI  3. Offline Detection
+// ─────────────────────────────────────────────────────────────
+
+(function patchApiCache() {
+  const _cache = {};
+  const CACHEABLE = ['exec_init','get_exec_accounts','get_exec_dashboard'];
+  const TTL_MS = 60 * 1000;
+  const _origGet = Api.get.bind(Api);
+  Api.get = async function(params) {
+    const action = params.action || '';
+    if (!CACHEABLE.includes(action)) return _origGet(params);
+    const key = action + '|' + (params.staffId||'') + '|' + (params.city||'');
+    const cached = _cache[key];
+    if (cached && (Date.now() - cached.ts) < TTL_MS) return cached.data;
+    const data = await _origGet(params);
+    _cache[key] = { data, ts: Date.now() };
+    return data;
+  };
+  const _origPost = Api.post.bind(Api);
+  Api.post = async function(body) {
+    const result = await _origPost(body);
+    Object.keys(_cache).forEach(k => delete _cache[k]);
+    return result;
+  };
+  window._cpCacheClear = () => Object.keys(_cache).forEach(k => delete _cache[k]);
+})();
+
+(function patchOffline() {
+  window.addEventListener('offline', () => showOfflineBanner(true));
+  window.addEventListener('online',  () => { showOfflineBanner(false); });
+  function showOfflineBanner(show) {
+    let b = document.getElementById('cp-offline-banner');
+    if (!b) {
+      b = document.createElement('div');
+      b.id = 'cp-offline-banner';
+      b.style.cssText = 'position:fixed;top:56px;left:0;right:0;z-index:999;background:#d97706;color:#fff;text-align:center;padding:8px;font-size:13px;font-weight:600;font-family:var(--fh,sans-serif);transition:transform .3s';
+      b.textContent = '📵 No internet — visit log will retry when reconnected';
+      document.body.appendChild(b);
+    }
+    b.style.transform = show ? 'translateY(0)' : 'translateY(-100%)';
+  }
+})();
+
+(function patchOptimisticUI() {
+  window._cpOptimisticRemove  = (accountNo) => window.dispatchEvent(new CustomEvent('cp:optimistic_remove',  { detail: { accountNo } }));
+  window._cpOptimisticRestore = (accountNo) => window.dispatchEvent(new CustomEvent('cp:optimistic_restore', { detail: { accountNo } }));
+})();
+</script>
+
 </body>
 </html>
