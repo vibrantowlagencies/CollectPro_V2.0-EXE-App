@@ -244,6 +244,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-s
 .vc{margin:0 14px 10px;padding:14px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--bg2);box-shadow:var(--shadow-sm);animation:slideIn .2s ease;cursor:pointer}
 .vc.today{border-left:4px solid var(--accent)}
 .vc.overdue{border-left:4px solid var(--red)}
+.vc-aging-strip{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;font-size:12px;font-weight:700;margin:6px 0}
+.vc-aging-strip.critical{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
+.vc-aging-strip.warning{background:#fffbeb;color:#b45309;border:1px solid #fde68a}
+.vc-aging-strip.ok{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
 .vc.future{border-left:4px solid var(--green)}
 .vc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
 .vc-name{font-family:var(--fh);font-size:15px;font-weight:700}
@@ -257,6 +261,8 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-s
 .vc-appt-strip.overdue{background:var(--red-lt);border-color:#fecaca;color:var(--red)}
 .vc-actions{display:flex;gap:7px;margin-top:10px}
 .vca{flex:1;padding:9px;border-radius:10px;border:none;cursor:pointer;font-family:var(--fh);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .15s}
+.vca.tc-wa{background:#e0f2f1;color:#0f766e;border:1px solid rgba(13,148,136,.25)}
+.vca.tc-wa:active{background:#b2dfdb}
 .vca:active{transform:scale(.97)}
 .vca.call{background:var(--green-lt);color:var(--green);border:1.5px solid #86efac}
 .vca.wa{background:#f0fdf4;color:#15803d;border:1.5px solid #86efac}
@@ -342,8 +348,8 @@ const CONFIG = {
   SESSION_KEY: 'voa_session_exec',
   // different from TC App
   REFRESH_MS: 25 * 60 * 1000,
-  ALLOWED_ROLE: 'EXECUTIVE',
-  // EXECUTIVE only
+  ALLOWED_ROLE: ['EXECUTIVE','SUPERVISOR'], // Supervisor can do dual role
+  // EXECUTIVE + SUPERVISOR
   APP_VERSION: 'v3.2.0',
   CITIES: ['CBE', 'CHN']
 };
@@ -478,6 +484,17 @@ const Utils = {
     d.setDate(d.getDate() + 1);
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   },
+  hoursAgo(isoTs) {
+    if (!isoTs) return 0;
+    try { return Math.round((Date.now() - new Date(isoTs).getTime()) / 3600000); }
+    catch(e) { return 0; }
+  },
+  fmtHours(h) {
+    if (!h || h < 1)  return 'Just now';
+    if (h < 24)  return h + 'h idle';
+    const d = Math.floor(h / 24);
+    return d + (d === 1 ? ' day' : ' days') + ' idle';
+  },
   buildWALink(mobile, msg) {
     const m = String(mobile).replace(/\D/g, '');
     const num = m.length === 10 ? '91' + m : m;
@@ -536,7 +553,7 @@ function useAuth({
         staffId: String(staffId).trim().toUpperCase(),
         pin: pin.trim()
       });
-      if (data.role !== CONFIG.ALLOWED_ROLE) {
+      if (!CONFIG.ALLOWED_ROLE.includes(data.role)) {
         throw new Error('This app is for Field Executives only');
       }
       const session = {
@@ -1003,15 +1020,47 @@ const VisitCard = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
   const today = Utils.todayStr();
-  const isToday = account.apptDate === today;
+  const isToday   = account.apptDate === today;
   const isOverdue = account.apptDate && account.apptDate < today;
   const cls = isOverdue ? 'overdue' : isToday ? 'today' : 'future';
+
+  // Aging calculation — how long has this account been pending
+  const ageHours   = Utils.hoursAgo(account.pendingSince || account.pending_since);
+  const daysPending = Math.floor(ageHours / 24);
+  const agingClass  = isOverdue ? 'critical' : ageHours >= 72 ? 'critical' : ageHours >= 48 ? 'warning' : 'ok';
+  const reschedCount  = account.rescheduleCount || 0;
+  const escalFlag     = account.escalationFlag  || 'NONE';
+  const reschedLabel  = reschedCount > 0 ? ` · Rescheduled ${reschedCount}×` : '';
+  const escalLabel    = escalFlag === 'EXEC_LOOP' ? ' 🚨 ESCALATED' : '';
+  const agingLabel  = isOverdue
+    ? `OVERDUE ${daysPending}d — customer waiting!${reschedLabel}${escalLabel}`
+    : ageHours >= 72
+    ? `CRITICAL: ${daysPending} days pending${reschedLabel}${escalLabel}`
+    : ageHours >= 48
+    ? `${daysPending} days idle${reschedLabel}`
+    : ageHours >= 24
+    ? `${daysPending} day pending${reschedLabel}`
+    : `Scheduled today${reschedLabel}`;
   const call = () => {
     window.location.href = 'tel:' + account.mobile.replace(/\D/g, '');
   };
   const wa = () => {
-    const msg = `Hi, I'm from VOA field team visiting for ACT router collection. Account: ${account.accountNo}. I'll be arriving shortly. Please be available.`;
+    const msg = `Hi, I'm from VOA field team visiting for ACT router collection.\nAccount: ${account.accountNo} | Customer: ${account.name}\nI'll be arriving shortly. Please be available.`;
     window.open(Utils.buildWALink(account.mobile, msg), '_blank');
+  };
+
+  // Contact the TC who fixed this appointment
+  const contactTC = () => {
+    const tcName   = account.tcName   || account.tcId || 'TC';
+    const tcMobile = account.tcMobile || '';
+    const appt     = account.apptDate || '';
+    const msg = `Hi ${tcName}, I'm visiting your account today.\n\nAccount: ${account.accountNo}\nCustomer: ${account.name}\nMobile: ${account.mobile}\nArea: ${account.area}\nAppt: ${appt}\nTC Remark: "${account.tcRemark || 'none'}"\n\nPlease share any additional info if needed. — ${account.execId || 'Exec'}`;
+    if (tcMobile) {
+      window.open(Utils.buildWALink(tcMobile, msg), '_blank');
+    } else {
+      // No mobile stored — open WA without number so exec can pick from contacts
+      window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+    }
   };
   return /*#__PURE__*/React.createElement("div", {
     className: `vc ${cls}`,
@@ -1025,6 +1074,9 @@ const VisitCard = ({
   }, account.accountNo)), /*#__PURE__*/React.createElement("span", {
     className: `vc-badge ${account.status === 'APPT_FIXED' ? 'vb-appt' : account.status === 'RESCHEDULED' ? 'vb-reschedule' : 'vb-nr'}`
   }, STATUS_LABELS[account.status] || account.status)), /*#__PURE__*/React.createElement("div", {
+    className: `vc-aging-strip ${agingClass}`
+  }, isOverdue ? '🔴' : ageHours >= 72 ? '🚨' : ageHours >= 48 ? '⚠️' : '🕐', ' ', agingLabel),
+  /*#__PURE__*/React.createElement("div", {
     className: "vc-row"
   }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCDE"), /*#__PURE__*/React.createElement("span", {
     style: {
@@ -1041,7 +1093,11 @@ const VisitCard = ({
     style: {
       color: 'var(--text3)'
     }
-  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCAC"), /*#__PURE__*/React.createElement("span", null, "TC: ", account.tcRemark))), account.apptDate && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCAC"), /*#__PURE__*/React.createElement("span", null, "TC note: ", account.tcRemark)),
+  account.tcName && /*#__PURE__*/React.createElement("div", {
+    className: "vc-row",
+    style: { color: 'var(--accent)', fontWeight: 600 }
+  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC77"), /*#__PURE__*/React.createElement("span", null, "Fixed by: ", account.tcName, " (", account.tcId, ")"))), account.apptDate && /*#__PURE__*/React.createElement("div", {
     className: `vc-appt-strip${isOverdue ? ' overdue' : ''}`
   }, "\uD83D\uDCC5 ", isToday ? 'Today' : isOverdue ? '⚠️ Overdue: ' : '', account.apptDate), /*#__PURE__*/React.createElement("div", {
     className: "vc-actions",
@@ -1052,7 +1108,11 @@ const VisitCard = ({
   }, "\uD83D\uDCDE Call"), /*#__PURE__*/React.createElement("button", {
     className: "vca wa",
     onClick: wa
-  }, "\uD83D\uDCAC WA"), /*#__PURE__*/React.createElement("button", {
+  }, "\uD83D\uDCAC WA Customer"), /*#__PURE__*/React.createElement("button", {
+    className: "vca tc-wa",
+    onClick: contactTC,
+    title: "WhatsApp the TC who fixed this appointment"
+  }, "\uD83D\uDCAC TC " + (account.tcName || account.tcId || '')), /*#__PURE__*/React.createElement("button", {
     className: "vca log",
     onClick: () => onLog(account)
   }, "\u270F\uFE0F Log Visit")));
