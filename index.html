@@ -1,4 +1,4 @@
-<!-- CollectPro / VORS — Exec_App_v3.2.0.html | Vibrant Owl Agencies | v3.2.0 Production Release -->
+<!-- Admin App v3.3 — Babel precompiled, no runtime JSX -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,58 +6,58 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Exec App">
-<meta name="theme-color" content="#0d9488">
+<meta name="apple-mobile-web-app-title" content="Admin">
+<meta name="theme-color" content="#dc2626">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>CollectPro — Executive</title>
-
+<title>CollectPro — Admin</title>
 <!--
   ╔══════════════════════════════════════════════════════════════╗
-  ║  CollectPro Exec App — v3.0.0                                ║
+  ║  CollectPro Admin App — v3.0.0                               ║
   ║  Product : CollectPro by Vibrant Owl Agencies (VOA)          ║
-  ║  Phase   : 2 — Auth Layer                                    ║
-  ║  Repo    : vibrantowlagencies/CollectPro_V2.0-EXE-App        ║
+  ║  Phase   : 3 — Full Admin Command Center                     ║
+  ║  User    : AD_001 Arun                                       ║
   ║                                                              ║
-  ║  NEXT.JS MIGRATION GUIDE                                     ║
-  ║  Same structure as TC App. Additional files:                 ║
-  ║  app/exec/login/page.jsx                                     ║
-  ║  app/exec/dashboard/page.jsx  (Phase 6)                      ║
-  ║  app/exec/visits/page.jsx     (Phase 6)                      ║
+  ║  TABS:                                                       ║
+  ║  🏠 Home    — Overview, alerts, team pulse                   ║
+  ║  📤 Upload  — Base upload, quality report, batch history     ║
+  ║  👥 Team    — Leaderboard, idle alerts, motivation           ║
+  ║  📋 Pending — Active accounts, aging, overdue                ║
+  ║  ⚠️ Issues  — Open issues, ACT Issues Excel                  ║
+  ║  ⚙️ Control — Cooling pool, monthly rollover                 ║
+  ║                                                              ║
+  ║  EXCEL EXPORTS:                                              ║
+  ║  1. ACT Base Quality Report (rejection proof)                ║
+  ║  2. ACT Issues Report (jbox/refund/mail proof)               ║
+  ║                                                              ║
+  ║  NEXT.JS: app/admin/* pages, hooks/useAdmin*.js              ║
   ╚══════════════════════════════════════════════════════════════╝
 -->
-
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
-/* ── DESIGN TOKENS — identical to TC App ───────────── */
 :root{
-  --bg:#f0fdfa; --bg2:#ffffff; --bg3:#f1f4f8;
-  --accent:#0d9488; --accent-lt:#f0fdfa; --accent-dk:#0f766e;
-  --blue:#0d9488; --blue-lt:#f0fdfa;
-  --green:#16a34a; --green-lt:#f0fdf4;
-  --red:#dc2626; --red-lt:#fef2f2;
-  --amber:#d97706; --amber-lt:#fffbeb;
-  --purple:#7c3aed; --purple-lt:#f5f3ff;
-  --cyan:#0891b2; --cyan-lt:#ecfeff;
-  --border:#e4e8ef; --border2:#d0d7e3;
-  --text:#0f172a; --text2:#475569; --text3:#94a3b8;
+  --bg:#fff5f5;--bg2:#fff;--bg3:#fef2f2;
+  --accent:#dc2626;--accent-lt:#fef2f2;--accent-dk:#b91c1c;
+  --green:#16a34a;--green-lt:#f0fdf4;
+  --blue:#3b82f6;--blue-lt:#eff6ff;
+  --amber:#d97706;--amber-lt:#fffbeb;
+  --purple:#7c3aed;--purple-lt:#f5f3ff;
+  --teal:#0d9488;--teal-lt:#f0fdfa;
+  --border:#e4e8ef;--border2:#d0d7e3;
+  --text:#0f172a;--text2:#475569;--text3:#94a3b8;
   --shadow-sm:0 1px 3px rgba(0,0,0,.06);
   --shadow:0 4px 16px rgba(0,0,0,.08);
   --shadow-lg:0 8px 32px rgba(0,0,0,.12);
   --r:14px;
-  --fh:'Sora',sans-serif;
-  --fm:'JetBrains Mono',monospace;
-  --fb:'Plus Jakarta Sans',sans-serif;
+  --fh:'Sora',sans-serif;--fm:'JetBrains Mono',monospace;--fb:'Plus Jakarta Sans',sans-serif;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body,#root{height:100%;width:100%;overflow:hidden}
+html,body,#root{height:100%;width:100%;overflow:hidden}@supports(height:100dvh){.app{height:100dvh!important}}
 body{background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-smoothing:antialiased}
 
-/* ── ANIMATIONS ─────────────────────────────────────── */
 @keyframes fadeUp  {from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn  {from{opacity:0}to{opacity:1}}
 @keyframes shake   {0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
@@ -65,271 +65,333 @@ body{background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-s
 @keyframes dotPop  {0%{transform:scale(.8);opacity:.4}50%{transform:scale(1.2);opacity:1}100%{transform:scale(1);opacity:1}}
 @keyframes slideIn {from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse   {0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes shimmer {0%{background-position:200% 0}100%{background-position:-200% 0}}
 
-/* ── LOGIN ──────────────────────────────────────────── */
-.login-screen{
-  min-height:100vh;display:flex;align-items:center;justify-content:center;
-  background:linear-gradient(145deg,#f0fdfa,#f8f9fb,#fff);padding:24px;
-}
-.login-card{
-  background:#fff;border:1px solid var(--border);border-radius:24px;
-  padding:44px 36px;width:100%;max-width:390px;
-  box-shadow:var(--shadow-lg);animation:fadeUp .4s ease;
-}
+/* ── LOGIN ── */
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#fff5f5,#f8f9fb,#fff);padding:24px}
+.login-card{background:#fff;border:1px solid var(--border);border-radius:24px;padding:44px 36px;width:100%;max-width:390px;box-shadow:var(--shadow-lg);animation:fadeUp .4s ease}
 .login-card.shake{animation:shake .4s ease}
 .login-logo-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:36px}
-.login-logo{
-  width:72px;height:72px;
-  background:linear-gradient(135deg,var(--accent),var(--accent-dk));
-  border-radius:20px;display:flex;align-items:center;justify-content:center;
-  font-family:var(--fh);font-weight:800;font-size:22px;color:#fff;
-  box-shadow:0 8px 28px rgba(13,148,136,.28);letter-spacing:.5px;
-}
-.login-title{font-family:var(--fh);font-size:24px;font-weight:700;color:var(--text)}
-.login-sub  {font-size:13px;color:var(--text3);text-align:center;line-height:1.5}
-
-/* Role pill — distinguishes Exec App from TC App visually */
-.role-pill{
-  display:inline-flex;align-items:center;gap:6px;
-  background:var(--blue-lt);border:1px solid #99f6e4;
-  color:var(--teal);border-radius:20px;padding:5px 14px;
-  font-family:var(--fm);font-size:11px;font-weight:700;
-  letter-spacing:.5px;margin-top:4px;
-}
-
-/* Form */
-.form-group {margin-bottom:18px}
-.form-label {font-size:11px;font-family:var(--fm);letter-spacing:1px;color:var(--text3);margin-bottom:8px;display:block;text-transform:uppercase}
-.form-input,.form-select{
-  width:100%;background:var(--bg3);border:1.5px solid var(--border);
-  border-radius:12px;padding:13px 15px;color:var(--text);
-  font-family:var(--fb);font-size:15px;outline:none;transition:all .2s;-webkit-appearance:none;
-}
-.form-input:focus,.form-select:focus{
-  border-color:var(--accent);background:#fff;
-  box-shadow:0 0 0 3px rgba(13,148,136,.1);
-}
+.login-title{font-family:var(--fh);font-size:24px;font-weight:700}
+.login-sub{font-size:13px;color:var(--text3);text-align:center;line-height:1.5}
+.role-pill{display:inline-flex;align-items:center;gap:6px;background:var(--accent-lt);border:1px solid rgba(220,38,38,.25);color:var(--accent);border-radius:20px;padding:5px 14px;font-family:var(--fm);font-size:11px;font-weight:700;letter-spacing:.5px;margin-top:4px}
+.form-group{margin-bottom:18px}
+.form-label{font-size:11px;font-family:var(--fm);letter-spacing:1px;color:var(--text3);margin-bottom:8px;display:block;text-transform:uppercase}
+.form-input,.form-select{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;padding:13px 15px;color:var(--text);font-family:var(--fb);font-size:15px;outline:none;transition:all .2s;-webkit-appearance:none}
+.form-input:focus,.form-select:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(220,38,38,.1)}
 .form-input.pin-field{font-family:var(--fm);font-size:22px;text-align:center;letter-spacing:.3em}
-
-/* City select chevron */
 .select-wrap{position:relative}
-.select-wrap::after{
-  content:'▾';position:absolute;right:14px;top:50%;
-  transform:translateY(-50%);color:var(--text3);font-size:14px;
-  pointer-events:none;
-}
-
-/* PIN dots */
+.select-wrap::after{content:'▾';position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px;pointer-events:none}
 .pin-dots{display:flex;gap:10px;justify-content:center;margin:4px 0 20px}
-.pin-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--border2);background:transparent;transition:all .15s ease}
+.pin-dot{width:12px;height:12px;border-radius:50%;border:2px solid var(--border2);background:transparent;transition:all .15s}
 .pin-dot.filled{background:var(--accent);border-color:var(--accent);animation:dotPop .2s ease}
-
-/* Button */
-.btn-login{
-  width:100%;padding:15px;
-  background:linear-gradient(135deg,var(--accent),var(--accent-dk));
-  border:none;border-radius:14px;color:#fff;
-  font-family:var(--fh);font-size:17px;font-weight:700;
-  cursor:pointer;box-shadow:0 4px 20px rgba(13,148,136,.3);
-  transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;
-}
+.btn-login{width:100%;padding:15px;background:linear-gradient(135deg,var(--accent),var(--accent-dk));border:none;border-radius:14px;color:#fff;font-family:var(--fh);font-size:17px;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(220,38,38,.3);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px}
 .btn-login:active{transform:scale(.98)}
 .btn-login:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}
-.login-error{
-  background:var(--red-lt);border:1px solid rgba(220,38,38,.2);
-  border-radius:10px;padding:11px 14px;font-size:13px;color:var(--red);
-  margin-top:12px;animation:fadeIn .2s ease;text-align:center;
-}
+.login-error{background:var(--accent-lt);border:1px solid rgba(220,38,38,.2);border-radius:10px;padding:11px 14px;font-size:13px;color:var(--accent);margin-top:12px;text-align:center;animation:fadeIn .2s ease}
 
-/* ── APP SHELL ──────────────────────────────────────── */
-.app{display:flex;flex-direction:column;height:100vh}
-.header{
-  background:var(--bg2);border-bottom:1px solid var(--border);
-  padding:0 16px;height:56px;display:flex;align-items:center;
-  justify-content:space-between;position:sticky;top:0;z-index:100;
-  box-shadow:var(--shadow-sm);flex-shrink:0;
-}
+/* ── SHELL ── */
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh}
+.header{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow-sm);flex-shrink:0}
 .brand{display:flex;align-items:center;gap:10px}
-.brand-logo{
-  width:34px;height:34px;
-  background:linear-gradient(135deg,var(--accent),var(--accent-dk));
-  border-radius:10px;display:flex;align-items:center;justify-content:center;
-  font-family:var(--fh);font-weight:800;font-size:11px;color:#fff;letter-spacing:.5px;
-}
-.brand-name{font-family:var(--fh);font-size:16px;font-weight:700;color:var(--text)}
-.brand-role{
-  font-family:var(--fm);font-size:10px;
-  color:var(--teal);background:var(--blue-lt);
-  padding:3px 9px;border-radius:20px;
-  border:1px solid rgba(13,148,136,.2);letter-spacing:.5px;
-}
+.brand-logo{width:34px;height:34px;background:linear-gradient(135deg,var(--accent),var(--accent-dk));border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-weight:800;font-size:11px;color:#fff;letter-spacing:.5px}
+.brand-name{font-family:var(--fh);font-size:16px;font-weight:700}
+.brand-role{font-family:var(--fm);font-size:10px;color:var(--accent);background:var(--accent-lt);padding:3px 9px;border-radius:20px;border:1px solid rgba(220,38,38,.2);letter-spacing:.5px}
 .hdr-right{display:flex;align-items:center;gap:8px}
+.city-badge{font-family:var(--fm);font-size:10px;font-weight:700;color:var(--accent);background:var(--accent-lt);padding:4px 9px;border-radius:20px;border:1px solid rgba(220,38,38,.2);letter-spacing:.5px}
 .staff-badge{font-family:var(--fm);font-size:11px;color:var(--text2);background:var(--bg3);padding:5px 10px;border-radius:8px;border:1px solid var(--border)}
-.city-badge{
-  font-family:var(--fm);font-size:10px;font-weight:700;
-  color:var(--teal);background:var(--blue-lt);
-  padding:4px 9px;border-radius:20px;
-  border:1px solid rgba(13,148,136,.2);letter-spacing:.5px;
-}
 .logout-btn{background:none;border:1px solid var(--border);border-radius:8px;color:var(--text3);cursor:pointer;padding:5px 10px;font-size:12px;font-family:var(--fb);transition:all .15s}
-.logout-btn:hover{border-color:var(--red);color:var(--red)}
+.logout-btn:hover{border-color:var(--accent);color:var(--accent)}
 
-/* ── BOTTOM NAV ─────────────────────────────────────── */
-.bnav{display:flex;background:var(--bg2);border-top:1px solid var(--border);height:60px;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom)}
-.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(--text3);font-size:10px;font-family:var(--fb);font-weight:600;transition:color .2s;padding:0}
-.ni .ico{font-size:20px}
-.ni.on{color:var(--teal)}
+/* ── NAV ── */
+.bnav{display:flex;background:var(--bg2);border-top:1px solid var(--border);height:60px;flex-shrink:0;padding-bottom:env(safe-area-inset-bottom);position:sticky;bottom:0;z-index:99;width:100%}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(--text3);font-size:10px;font-family:var(--fb);font-weight:600;transition:color .2s;padding:0;position:relative}
+.ni .ico{font-size:18px}
+.ni.on{color:var(--accent)}
+.nav-dot{position:absolute;top:8px;right:calc(50% - 14px);width:7px;height:7px;border-radius:50%;background:var(--accent);border:2px solid var(--bg2)}
 
-/* ── PAGES ──────────────────────────────────────────── */
-.main-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+/* ── PAGES ── */
+.main-content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0}
 .page{display:none;padding-bottom:80px}
 .page.on{display:block;animation:fadeIn .2s ease}
 
-/* ── DASHBOARD ──────────────────────────────────────── */
-.dash-wrap{padding:16px}
-.dash-greeting{font-family:var(--fh);font-size:20px;font-weight:700;margin-bottom:2px}
-.dash-date{font-size:12px;color:var(--text3);font-family:var(--fm);margin-bottom:16px}
-.dash-cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:16px}
-.dash-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;box-shadow:var(--shadow-sm)}
-.dash-card-icon{font-size:20px;margin-bottom:8px}
-.dash-card-val{font-family:var(--fh);font-size:30px;font-weight:800;line-height:1}
-.dash-card.teal .dash-card-val{color:var(--teal)}
-.dash-card.green  .dash-card-val{color:var(--green)}
-.dash-card.orange .dash-card-val{color:var(--accent)}
-.dash-card.red    .dash-card-val{color:var(--red)}
-.dash-card-lbl{font-size:11px;color:var(--text3);margin-top:4px;font-weight:500}
+/* ── SHARED COMPONENTS ── */
+.wrap{padding:16px}
+.section-title{font-family:var(--fh);font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--shadow-sm)}
+.card-title{font-family:var(--fh);font-size:13px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.row:last-child{border-bottom:none}
+.row-label{font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px}
+.row-val{font-family:var(--fm);font-size:12px;font-weight:700;color:var(--text)}
+.row-val.green{color:var(--green)}
+.row-val.red{color:var(--accent)}
+.row-val.amber{color:var(--amber)}
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;box-shadow:var(--shadow-sm)}
+.stat-icon{font-size:18px;margin-bottom:6px}
+.stat-val{font-family:var(--fh);font-size:26px;font-weight:800;line-height:1}
+.stat-val.red{color:var(--accent)}
+.stat-val.green{color:var(--green)}
+.stat-val.amber{color:var(--amber)}
+.stat-val.purple{color:var(--purple)}
+.stat-lbl{font-size:11px;color:var(--text3);margin-top:3px;font-weight:500}
+.badge{font-size:10px;font-family:var(--fm);font-weight:700;padding:2px 8px;border-radius:20px}
+.badge.green{background:var(--green-lt);color:var(--green);border:1px solid #86efac}
+.badge.red{background:var(--accent-lt);color:var(--accent);border:1px solid rgba(220,38,38,.3)}
+.badge.amber{background:var(--amber-lt);color:var(--amber);border:1px solid #fde68a}
+.badge.blue{background:var(--blue-lt);color:var(--blue);border:1px solid #bfdbfe}
+.badge.purple{background:var(--purple-lt);color:var(--purple);border:1px solid #ddd6fe}
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent-dk));border:none;border-radius:var(--r);color:#fff;font-family:var(--fh);font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 4px 16px rgba(220,38,38,.25);transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
+.btn-primary:active{transform:scale(.98)}
+.btn-primary:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.btn-secondary{width:100%;padding:12px;background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);color:var(--text2);font-family:var(--fh);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px}
+.btn-secondary:active{transform:scale(.98)}
+.btn-excel{width:100%;padding:13px;background:linear-gradient(135deg,#166534,#15803d);border:none;border-radius:var(--r);color:#fff;font-family:var(--fh);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:10px;transition:all .2s}
+.btn-excel:active{transform:scale(.98)}
+.toggle-wrap{display:flex;border-radius:10px;overflow:hidden;border:1.5px solid var(--border);height:34px}
+.toggle-opt{padding:0 14px;border:none;font-family:var(--fm);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;background:transparent;color:var(--text3)}
+.toggle-opt.on{background:var(--accent);color:#fff}
+.toggle-opt.on.green{background:var(--green)}
+.toggle-opt.on.amber{background:var(--amber)}
+.warn-banner{display:flex;align-items:flex-start;gap:10px;background:var(--amber-lt);border:1px solid #fde68a;border-radius:10px;padding:12px 14px;margin-bottom:10px;animation:slideIn .3s ease}
+.warn-banner-text{font-size:12px;color:var(--amber);line-height:1.5;font-weight:500}
+.warn-codes{font-family:var(--fm);font-size:11px;color:var(--amber);margin-top:3px;word-break:break-all}
+.alert-card{display:flex;align-items:flex-start;gap:10px;border-radius:12px;padding:12px 14px;margin-bottom:10px;animation:slideIn .3s ease}
+.alert-card.red{background:var(--accent-lt);border:1px solid rgba(220,38,38,.25)}
+.alert-card.amber{background:var(--amber-lt);border:1px solid #fde68a}
+.alert-card.green{background:var(--green-lt);border:1px solid #86efac}
+.alert-icon{font-size:18px;flex-shrink:0}
+.alert-title{font-size:13px;font-weight:700;margin-bottom:2px}
+.alert-card.red .alert-title{color:var(--accent)}
+.alert-card.amber .alert-title{color:var(--amber)}
+.alert-card.green .alert-title{color:var(--green)}
+.alert-sub{font-size:11px;color:var(--text3);line-height:1.5}
+.skeleton{background:linear-gradient(90deg,var(--bg3) 25%,var(--border) 50%,var(--bg3) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:8px}
 
-/* Session card */
-.session-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin:0 0 12px;box-shadow:var(--shadow-sm);animation:slideIn .3s ease}
-.session-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
-.session-row:last-child{border-bottom:none}
-.session-label{font-size:11px;color:var(--text3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px}
-.session-value{font-size:12px;color:var(--text);font-family:var(--fm);font-weight:500}
-.token-active{font-size:11px;color:var(--green);font-family:var(--fm);font-weight:600;display:flex;align-items:center;gap:4px}
-.token-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+/* ── UPLOAD TAB ── */
+.upload-zone{border:2px dashed var(--border2);border-radius:var(--r);padding:32px 20px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg2);margin-bottom:16px;position:relative}
+.upload-zone.drag-over{border-color:var(--accent);background:var(--accent-lt)}
+.upload-zone.has-file{border-color:var(--green);border-style:solid;background:var(--green-lt)}
+.upload-zone-icon{font-size:36px;margin-bottom:10px}
+.upload-zone-title{font-family:var(--fh);font-size:15px;font-weight:700;margin-bottom:4px}
+.upload-zone.has-file .upload-zone-title{color:var(--green)}
+.upload-zone-sub{font-size:12px;color:var(--text3)}
+.upload-zone.has-file .upload-zone-sub{color:var(--green);font-weight:600}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.file-info{display:flex;align-items:center;gap:10px;background:var(--green-lt);border:1px solid #86efac;border-radius:10px;padding:10px 14px;margin-bottom:14px;animation:slideIn .3s ease}
+.file-name{font-size:13px;font-weight:700;color:var(--green);flex:1;word-break:break-all}
+.file-rows{font-family:var(--fm);font-size:11px;color:var(--green)}
+.file-clear{background:none;border:none;font-size:16px;cursor:pointer;color:var(--text3);padding:2px 6px;border-radius:6px}
+.config-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:16px;box-shadow:var(--shadow-sm)}
+.config-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.config-row:last-child{border-bottom:none}
+.config-row.col{flex-direction:column;align-items:flex-start;gap:8px}
+.config-label{font-size:13px;font-weight:600;color:var(--text)}
+.config-sub{font-size:11px;color:var(--text3);margin-top:2px}
+.batch-input{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:10px;padding:10px 12px;color:var(--text);font-family:var(--fm);font-size:13px;outline:none;transition:all .2s}
+.batch-input:focus{border-color:var(--accent);background:#fff}
+.progress-wrap{margin-bottom:20px}
+.progress-label{font-size:12px;font-family:var(--fm);color:var(--text2);margin-bottom:8px;display:flex;justify-content:space-between}
+.progress-bar-outer{height:8px;background:var(--border);border-radius:6px;overflow:hidden}
+.progress-bar-inner{height:8px;border-radius:6px;transition:width .4s ease;background:linear-gradient(90deg,var(--accent),var(--accent-dk))}
+.progress-step{font-size:11px;color:var(--text3);font-family:var(--fm);margin-top:6px;text-align:center}
 
-/* Coming soon */
-.coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;text-align:center}
-.coming-soon-icon{width:64px;height:64px;background:var(--blue-lt);border:1px solid rgba(13,148,136,.2);border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:16px}
-.coming-soon-title{font-family:var(--fh);font-size:17px;font-weight:700;margin-bottom:8px}
-.coming-soon-sub{font-size:13px;color:var(--text3);line-height:1.6;max-width:260px}
+/* ── QUALITY REPORT ── */
+.qr-hero{border-radius:var(--r);padding:18px;margin-bottom:14px;animation:slideIn .3s ease}
+.qr-hero.excellent{background:linear-gradient(135deg,var(--green-lt),#dcfce7);border:1px solid #86efac}
+.qr-hero.good     {background:linear-gradient(135deg,var(--teal-lt),#ccfbf1);border:1px solid #5eead4}
+.qr-hero.average  {background:linear-gradient(135deg,var(--amber-lt),#fef9c3);border:1px solid #fde68a}
+.qr-hero.poor     {background:var(--accent-lt);border:1px solid rgba(220,38,38,.25)}
+.qr-hero-label{font-size:11px;font-family:var(--fm);letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
+.qr-hero.excellent .qr-hero-label{color:var(--green)}
+.qr-hero.good      .qr-hero-label{color:var(--teal)}
+.qr-hero.average   .qr-hero-label{color:var(--amber)}
+.qr-hero.poor      .qr-hero-label{color:var(--accent)}
+.qr-score{font-family:var(--fh);font-size:48px;font-weight:800;line-height:1;margin-bottom:4px}
+.qr-hero.excellent .qr-score{color:var(--green)}
+.qr-hero.good      .qr-score{color:var(--teal)}
+.qr-hero.average   .qr-score{color:var(--amber)}
+.qr-hero.poor      .qr-score{color:var(--accent)}
+.qr-msg{font-size:13px;font-weight:600}
+.qr-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:var(--r);overflow:hidden;margin-bottom:12px}
+.qr-stat{background:var(--bg2);padding:12px 8px;text-align:center}
+.qr-stat-val{font-family:var(--fh);font-size:22px;font-weight:800;line-height:1}
+.qr-stat-val.g{color:var(--green)}
+.qr-stat-val.r{color:var(--accent)}
+.qr-stat-val.a{color:var(--amber)}
+.qr-stat-lbl{font-size:10px;font-family:var(--fm);color:var(--text3);margin-top:3px;text-transform:uppercase}
+.qr-bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.qr-bar-label{font-size:12px;color:var(--text2);width:100px;flex-shrink:0;font-weight:500}
+.qr-bar-outer{flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden}
+.qr-bar-inner{height:7px;border-radius:4px;transition:width .5s ease}
+.qr-bar-count{font-family:var(--fm);font-size:11px;font-weight:700;width:30px;text-align:right;flex-shrink:0}
 
-/* Spinner */
+/* ── BATCH HISTORY ── */
+.batch-item{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;box-shadow:var(--shadow-sm)}
+.batch-score-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-size:13px;font-weight:800;flex-shrink:0}
+.batch-score-circle.excellent{background:var(--green-lt);color:var(--green);border:2px solid #86efac}
+.batch-score-circle.good     {background:var(--teal-lt);color:var(--teal);border:2px solid #5eead4}
+.batch-score-circle.average  {background:var(--amber-lt);color:var(--amber);border:2px solid #fde68a}
+.batch-score-circle.poor     {background:var(--accent-lt);color:var(--accent);border:2px solid rgba(220,38,38,.3)}
+.batch-info{flex:1}
+.batch-no{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--text)}
+.batch-meta{font-size:11px;color:var(--text3);font-family:var(--fm);margin-top:2px}
+.batch-stats{text-align:right}
+.batch-workable{font-family:var(--fh);font-size:14px;font-weight:800;color:var(--green)}
+.batch-rejected{font-size:11px;color:var(--accent);font-family:var(--fm)}
+
+/* ── TEAM TAB ── */
+.lb-row{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px;box-shadow:var(--shadow-sm);animation:slideIn .3s ease}
+.lb-rank{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;font-family:var(--fh)}
+.lb-rank.r1{background:var(--amber-lt);color:var(--amber)}
+.lb-rank.r2{background:#f1f5f9;color:var(--text2)}
+.lb-rank.r3{background:#fff7ed;color:#9a3412}
+.lb-rank.rx{background:var(--bg3);color:var(--text3)}
+.lb-info{flex:1}
+.lb-name{font-size:13px;font-weight:700;color:var(--text)}
+.lb-id{font-size:10px;font-family:var(--fm);color:var(--text3)}
+.lb-bar-wrap{background:var(--bg3);border-radius:4px;height:5px;flex:1;margin:0 8px}
+.lb-bar{background:var(--accent);border-radius:4px;height:5px;transition:width .5s ease}
+.lb-count{font-family:var(--fm);font-size:13px;font-weight:700;color:var(--accent);flex-shrink:0}
+.lb-me .lb-name{color:var(--accent)}
+.me-tag{background:var(--accent);color:#fff;font-size:9px;font-weight:800;padding:2px 6px;border-radius:20px;font-family:var(--fm);margin-left:5px}
+.idle-card{background:var(--accent-lt);border:1px solid rgba(220,38,38,.25);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.idle-title{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.idle-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(220,38,38,.1)}
+.idle-item:last-child{border-bottom:none}
+.idle-avatar{width:32px;height:32px;border-radius:50%;background:rgba(220,38,38,.1);display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-weight:800;font-size:11px;color:var(--accent);flex-shrink:0}
+.idle-name{font-size:13px;font-weight:600;flex:1}
+.idle-since{font-size:11px;font-family:var(--fm);color:var(--text3)}
+
+/* ── PENDING TAB ── */
+.filter-chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none}
+.filter-chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:11px;font-family:var(--fm);border:1.5px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .2s;white-space:nowrap}
+.chip.on{background:var(--accent-lt);border-color:rgba(220,38,38,.35);color:var(--accent);font-weight:700}
+.pending-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;box-shadow:var(--shadow-sm);animation:slideIn .3s ease;position:relative;overflow:hidden}
+.pending-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px}
+.pending-card.overdue::before{background:var(--accent)}
+.pending-card.aging::before  {background:var(--amber)}
+.pending-card.normal::before {background:var(--border)}
+.pc-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.pc-accno{font-family:var(--fh);font-size:14px;font-weight:800;color:var(--accent)}
+.pc-name{font-size:14px;font-weight:700;margin-bottom:2px}
+.pc-phone{font-family:var(--fm);font-size:12px;color:var(--green);font-weight:600}
+.pc-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.pc-area{font-size:10px;font-family:var(--fm);color:var(--text3);padding:3px 8px;background:var(--bg3);border-radius:20px;border:1px solid var(--border)}
+
+/* ── ISSUES TAB ── */
+.issue-type-tabs{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;scrollbar-width:none}
+.issue-type-tabs::-webkit-scrollbar{display:none}
+.it-chip{flex-shrink:0;padding:6px 12px;border-radius:20px;font-size:11px;font-family:var(--fm);border:1.5px solid var(--border);background:var(--bg2);color:var(--text2);cursor:pointer;white-space:nowrap;transition:all .2s}
+.it-chip.on{background:var(--accent-lt);border-color:rgba(220,38,38,.4);color:var(--accent);font-weight:700}
+.issue-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;box-shadow:var(--shadow-sm);animation:slideIn .3s ease}
+.issue-type-badge{display:inline-block;font-size:10px;font-family:var(--fm);font-weight:700;padding:3px 9px;border-radius:20px;margin-bottom:8px}
+.issue-type-badge.JBOX  {background:var(--purple-lt);color:var(--purple);border:1px solid #ddd6fe}
+.issue-type-badge.REFUND{background:var(--amber-lt);color:var(--amber);border:1px solid #fde68a}
+.issue-type-badge.MAIL  {background:var(--blue-lt);color:var(--blue);border:1px solid #bfdbfe}
+.issue-type-badge.RECONNECTION{background:var(--teal-lt);color:var(--teal);border:1px solid #99f6e4}
+.issue-type-badge.ADDR  {background:var(--green-lt);color:var(--green);border:1px solid #86efac}
+.issue-remark{font-size:11px;color:var(--text3);font-style:italic;background:var(--bg3);border-radius:8px;padding:6px 10px;margin:8px 0;border-left:2px solid var(--border2)}
+.issue-date{font-size:11px;font-family:var(--fm);color:var(--text3)}
+.resolve-btn{padding:7px 14px;border-radius:8px;border:1.5px solid #86efac;background:var(--green-lt);color:var(--green);font-family:var(--fh);font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.resolve-btn:active{transform:scale(.95)}
+
+/* ── CONTROL TAB ── */
+.cooling-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;box-shadow:var(--shadow-sm)}
+.cooling-card.overdue{border-color:rgba(220,38,38,.4);background:var(--accent-lt)}
+.days-left{font-family:var(--fh);font-size:22px;font-weight:800}
+.days-left.over{color:var(--accent)}
+.days-left.ok{color:var(--teal)}
+.release-btn{padding:7px 14px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--teal),#0f766e);color:#fff;font-family:var(--fh);font-size:11px;font-weight:700;cursor:pointer;transition:all .15s}
+.release-btn:active{transform:scale(.95)}
+.rollover-preview{background:var(--bg3);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.rollover-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
+.rollover-row:last-child{border-bottom:none}
+
+/* ── CONFIRM SHEET ── */
+.confirm-overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.confirm-sheet{background:#fff;border-radius:24px 24px 0 0;padding:24px 20px 32px;width:100%;max-width:480px;animation:fadeUp .3s ease}
+.confirm-title{font-family:var(--fh);font-size:18px;font-weight:800;margin-bottom:8px;color:var(--accent)}
+.confirm-body{font-size:14px;color:var(--text2);line-height:1.6;margin-bottom:20px}
+.confirm-actions{display:flex;gap:10px}
+.confirm-cancel{flex:1;padding:13px;background:var(--bg3);border:1.5px solid var(--border);border-radius:12px;font-family:var(--fh);font-size:15px;font-weight:700;color:var(--text2);cursor:pointer}
+.confirm-proceed{flex:1;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent-dk));border:none;border-radius:12px;font-family:var(--fh);font-size:15px;font-weight:700;color:#fff;cursor:pointer}
+
+/* ── TOAST + LOADERS ── */
 .spinner{width:20px;height:20px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0}
-
-/* Toast */
+.spinner-sm{width:16px;height:16px;border-width:2px;border-color:rgba(220,38,38,.15);border-top-color:var(--accent)}
 .toast-wrap{position:fixed;bottom:76px;left:50%;transform:translateX(-50%);z-index:400;animation:fadeUp .25s ease}
 .toast-inner{background:var(--text);color:#fff;border-radius:14px;padding:13px 22px;font-size:14px;font-weight:500;white-space:nowrap;box-shadow:var(--shadow-lg);font-family:var(--fb)}
 .toast-inner.success{background:var(--green)}
-.toast-inner.error  {background:var(--red)}
+.toast-inner.error  {background:var(--accent)}
 .toast-inner.warning{background:var(--amber)}
-
-/* Loading */
-.load-overlay{position:fixed;inset:0;background:rgba(248,249,251,.88);z-index:300;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.load-overlay{position:fixed;inset:0;background:rgba(255,245,245,.92);z-index:300;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px}
 .load-spinner{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
 .load-text{font-family:var(--fm);font-size:13px;color:var(--text2)}
 
-
-/* ── VISIT ACCOUNTS ────────────────────────────────── */
-.list-hdr{padding:12px 14px 10px;position:sticky;top:0;background:var(--bg2);z-index:10;border-bottom:1px solid var(--border)}
-.list-hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.list-ttl{font-family:var(--fh);font-size:15px;font-weight:700}
-.rfr-btn{background:var(--accent-lt);border:1px solid rgba(13,148,136,.3);color:var(--accent);border-radius:8px;padding:5px 10px;font-family:var(--fh);font-size:12px;font-weight:600;cursor:pointer}
-.fchips{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
-.fchips::-webkit-scrollbar{display:none}
-.fchip{flex-shrink:0;padding:6px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg2);font-family:var(--fh);font-size:11px;font-weight:600;color:var(--text3);cursor:pointer;white-space:nowrap;transition:all .15s}
-.fchip.on{background:var(--accent);border-color:var(--accent);color:#fff}
-
-/* ── VISIT CARD ────────────────────────────────────── */
-.vc{margin:0 14px 10px;padding:14px;border-radius:var(--r);border:1.5px solid var(--border);background:var(--bg2);box-shadow:var(--shadow-sm);animation:slideIn .2s ease;cursor:pointer}
-.vc.today{border-left:4px solid var(--accent)}
-.vc.overdue{border-left:4px solid var(--red)}
-.vc-aging-strip{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:8px;font-size:12px;font-weight:700;margin:6px 0}
-.vc-aging-strip.critical{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
-.vc-aging-strip.warning{background:#fffbeb;color:#b45309;border:1px solid #fde68a}
-.vc-aging-strip.ok{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
-.vc.future{border-left:4px solid var(--green)}
-.vc-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px}
-.vc-name{font-family:var(--fh);font-size:15px;font-weight:700}
-.vc-no{font-family:var(--fm);font-size:11px;color:var(--text3);margin-top:1px}
-.vc-badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.3px;text-transform:uppercase;flex-shrink:0;margin-left:8px}
-.vb-appt{background:var(--accent-lt);color:var(--accent);border:1px solid rgba(13,148,136,.2)}
-.vb-nr{background:var(--red-lt);color:var(--red);border:1px solid #fecaca}
-.vb-reschedule{background:var(--amber-lt);color:var(--amber);border:1px solid #fde68a}
-.vc-row{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text2);margin-bottom:3px}
-.vc-appt-strip{background:var(--accent-lt);border:1px solid rgba(13,148,136,.2);border-radius:8px;padding:6px 10px;display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--accent);margin:8px 0}
-.vc-appt-strip.overdue{background:var(--red-lt);border-color:#fecaca;color:var(--red)}
-.vc-actions{display:flex;gap:7px;margin-top:10px}
-.vca{flex:1;padding:9px;border-radius:10px;border:none;cursor:pointer;font-family:var(--fh);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:4px;transition:all .15s}
-.vca.tc-wa{background:#e0f2f1;color:#0f766e;border:1px solid rgba(13,148,136,.25)}
-.vca.tc-wa:active{background:#b2dfdb}
-.vca:active{transform:scale(.97)}
-.vca.call{background:var(--green-lt);color:var(--green);border:1.5px solid #86efac}
-.vca.wa{background:#f0fdf4;color:#15803d;border:1.5px solid #86efac}
-.vca.log{background:var(--accent-lt);color:var(--accent);border:1.5px solid rgba(13,148,136,.2)}
-
-/* ── LOG VISIT SHEET ───────────────────────────────── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .2s ease}
-.sheet{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:14px 16px 36px;animation:slideIn .25s ease}
-.sh-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 14px}
-.sh-title{font-family:var(--fh);font-size:17px;font-weight:700;margin-bottom:4px}
-.sh-sub{font-size:13px;color:var(--text3);margin-bottom:14px}
-.sh-cust{background:var(--accent-lt);border:1px solid rgba(13,148,136,.15);border-radius:var(--r);padding:12px 14px;margin-bottom:14px}
-.sh-cust-name{font-family:var(--fh);font-size:15px;font-weight:700}
-.sh-cust-acc{font-family:var(--fm);font-size:11px;color:var(--accent)}
-.og-title{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
-.og-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
-.ob{padding:10px 7px;border-radius:10px;border:1.5px solid var(--border);background:var(--bg2);font-family:var(--fh);font-size:11px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;text-align:center}
-.ob:active{transform:scale(.97)}
-.ob.sel-teal{border-color:var(--accent);background:var(--accent);color:#fff}
-.ob.sel-red{border-color:var(--red);background:var(--red);color:#fff}
-.ob.sel-amber{border-color:var(--amber);background:var(--amber);color:#fff}
-.ob.sel-purple{border-color:#7c3aed;background:#7c3aed;color:#fff}
-.sl-label{font-size:11px;font-weight:700;color:var(--text2);letter-spacing:.5px;text-transform:uppercase;margin-bottom:7px}
-.rm-ta{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--r);font-family:var(--fb);font-size:14px;color:var(--text);resize:none;outline:none;transition:border-color .2s;min-height:72px;background:var(--bg3)}
-.rm-ta:focus{border-color:var(--accent);background:#fff}
-.dt-inp{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:var(--r);font-family:var(--fb);font-size:15px;color:var(--text);outline:none;transition:border-color .2s;margin-bottom:14px;background:var(--bg3);-webkit-appearance:none}
-.dt-inp:focus{border-color:var(--accent);background:#fff}
-.sub-btn{width:100%;padding:14px;border-radius:var(--r);border:none;background:linear-gradient(135deg,var(--accent),var(--accent-dk));color:#fff;font-family:var(--fh);font-size:15px;font-weight:700;cursor:pointer;transition:all .15s;margin-top:8px;box-shadow:0 4px 14px rgba(13,148,136,.3)}
-.sub-btn:disabled{background:var(--border);color:var(--text3);cursor:not-allowed;box-shadow:none}
-.sub-btn:not(:disabled):active{transform:scale(.99)}
-.cnl-lnk{display:block;text-align:center;margin-top:12px;font-size:14px;color:var(--text3);cursor:pointer;font-weight:500}
-
-/* ── STORE TAB ─────────────────────────────────────── */
-.store-wrap{padding:14px}
-.store-card{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
-.store-card-title{font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:7px}
-.inp{width:100%;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--r);padding:12px 14px;color:var(--text);font-family:var(--fb);font-size:14px;outline:none;transition:all .2s;-webkit-appearance:none;margin-bottom:10px}
-.inp:focus{border-color:var(--accent);background:#fff}
-.store-sub-btn{width:100%;padding:13px;border-radius:var(--r);border:none;background:linear-gradient(135deg,var(--accent),var(--accent-dk));color:#fff;font-family:var(--fh);font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(13,148,136,.25)}
-.store-sub-btn:disabled{background:var(--border);color:var(--text3);cursor:not-allowed;box-shadow:none}
-.store-history{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;margin-top:10px;font-size:12px;color:var(--text2)}
-
-/* ── REPORT TAB ────────────────────────────────────── */
-.rpt-hdr{background:linear-gradient(135deg,#0f766e,#0d9488);padding:18px 16px;margin-bottom:14px}
-.rpt-date{font-size:11px;color:rgba(255,255,255,.55);font-family:var(--fm);margin-bottom:3px}
-.rpt-title{font-family:var(--fh);font-size:18px;font-weight:700;color:#fff}
-.rpt-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-.rpt-stat{background:rgba(255,255,255,.12);border-radius:10px;padding:10px;text-align:center}
-.rpt-val{font-family:var(--fm);font-size:20px;color:#fff;font-weight:500}
-.rpt-lbl{font-size:10px;color:rgba(255,255,255,.55);font-weight:600;letter-spacing:.3px;margin-top:2px}
-.rpt-section{padding:0 14px 14px}
-.rpt-row{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px 13px;margin-bottom:8px;display:flex;align-items:center;gap:12px;box-shadow:var(--shadow-sm)}
-.rpt-time{font-family:var(--fm);font-size:11px;color:var(--text3);flex-shrink:0}
-.rpt-info{flex:1}
-.rpt-aname{font-size:13px;font-weight:600}
-.rpt-aout{font-size:11px;color:var(--text3);margin-top:1px}
-.dl-btn{background:var(--green-lt);border:1px solid #86efac;color:var(--green);border-radius:8px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--fh)}
-
-/* scrollbar */
 ::-webkit-scrollbar{width:3px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+
+/* ── STAFF TAB ──────────────────────────────────────────── */
+.staff-stat-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.staff-stat-box{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px 8px;text-align:center;box-shadow:var(--shadow-sm)}
+.staff-stat-val{font-family:var(--fh);font-size:26px;font-weight:800;line-height:1}
+.staff-stat-lbl{font-size:10px;color:var(--text3);font-family:var(--fm);text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.staff-add-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--accent),var(--accent-dk));border:none;border-radius:12px;color:#fff;font-family:var(--fh);font-size:14px;font-weight:700;cursor:pointer;margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(220,38,38,.25);transition:all .15s}
+.staff-add-btn:active{transform:scale(.99)}
+.staff-add-form{background:var(--bg2);border:1.5px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px;box-shadow:var(--shadow-sm)}
+.saf-title{font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:14px;color:var(--text)}
+.saf-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.saf-field{display:flex;flex-direction:column;gap:5px}
+.saf-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;font-family:var(--fm)}
+.saf-input{padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font-family:var(--fb);font-size:13px;color:var(--text);background:var(--bg3);outline:none;-webkit-appearance:none;transition:border-color .2s}
+.saf-input:focus{border-color:var(--accent);background:#fff}
+.saf-submit{width:100%;padding:12px;background:linear-gradient(135deg,var(--green),#15803d);border:none;border-radius:10px;color:#fff;font-family:var(--fh);font-size:13px;font-weight:700;cursor:pointer;margin-top:4px;transition:all .15s}
+.saf-submit:disabled{opacity:.45;cursor:not-allowed}
+.role-chips{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.role-chips::-webkit-scrollbar{display:none}
+.role-chip{flex-shrink:0;padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--bg2);font-family:var(--fh);font-size:11px;font-weight:600;color:var(--text3);cursor:pointer;white-space:nowrap;transition:all .15s}
+.role-chip.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.scard{background:var(--bg2);border:1.5px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:var(--shadow-sm);transition:all .15s}
+.scard.inactive{opacity:.65;border-style:dashed}
+.scard-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.scard-avatar{width:44px;height:44px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-family:var(--fh);font-weight:800;font-size:15px;color:#fff;flex-shrink:0;letter-spacing:.5px}
+.av-tc{background:linear-gradient(135deg,#f97316,#ea580c)}
+.av-exec{background:linear-gradient(135deg,#0d9488,#0f766e)}
+.av-sup{background:linear-gradient(135deg,#7c3aed,#6d28d9)}
+.av-admin{background:linear-gradient(135deg,#dc2626,#b91c1c)}
+.av-default{background:linear-gradient(135deg,#64748b,#475569)}
+.scard-info{flex:1;min-width:0}
+.scard-name{font-family:var(--fh);font-size:15px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.scard-meta{font-family:var(--fm);font-size:11px;color:var(--text3);margin-top:2px}
+.scard-badge{flex-shrink:0}
+.scard-divider{height:1px;background:var(--border);margin-bottom:10px}
+.scard-actions{display:flex;gap:7px;flex-wrap:wrap}
+.sact{padding:7px 12px;border-radius:9px;font-family:var(--fh);font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid;transition:all .15s;display:flex;align-items:center;gap:4px}
+.sact:active{transform:scale(.96)}
+.sact-leave{background:var(--accent-lt);color:var(--accent);border-color:rgba(220,38,38,.3)}
+.sact-activate{background:var(--green-lt);color:var(--green);border-color:#86efac}
+.sact-city{background:var(--blue-lt);color:var(--blue);border-color:#bfdbfe}
+.sact-pin{background:var(--amber-lt);color:var(--amber);border-color:#fde68a}
+.scard-owner-note{font-size:11px;color:var(--text3);font-family:var(--fm);font-style:italic;padding:4px 2px}
+.city-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .2s ease}
+.city-drawer{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;max-width:480px;padding:16px 16px 36px;animation:slideIn .25s ease}
+.city-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 14px}
+.city-drawer-title{font-family:var(--fh);font-size:16px;font-weight:700;margin-bottom:6px}
+.city-drawer-sub{font-size:13px;color:var(--text3);margin-bottom:16px}
+.city-opt{display:flex;align-items:center;gap:14px;padding:14px;border:1.5px solid var(--border);border-radius:var(--r);cursor:pointer;margin-bottom:8px;transition:all .15s;background:var(--bg2)}
+.city-opt:active{background:var(--blue-lt);border-color:var(--blue)}
+.city-opt-icon{font-size:28px;flex-shrink:0}
+.city-opt-name{font-family:var(--fh);font-size:14px;font-weight:700}
+.city-opt-sub{font-size:12px;color:var(--text3);margin-top:2px}
+.city-cancel{display:block;text-align:center;padding:12px;font-size:14px;color:var(--text3);cursor:pointer;font-family:var(--fb)}
 </style>
 </head>
 <body>
 <div id="root"></div>
-
 <script>
 const {
   useState,
@@ -345,66 +407,101 @@ const {
 const CONFIG = {
   API_URL: 'https://script.google.com/macros/s/AKfycbyRb7oEMdppJKouU5xCAQVq-IauFaugqXslscYChoFaXkvWzIQzHCg9q5u3AZWAlxB_Pg/exec',
   CLIENT_ID: 'VOA_CBE',
-  SESSION_KEY: 'voa_session_exec',
-  // different from TC App
+  SESSION_KEY: 'voa_session_admin',
   REFRESH_MS: 25 * 60 * 1000,
-  ALLOWED_ROLE: ['EXECUTIVE','SUPERVISOR'], // Supervisor can do dual role
-  // EXECUTIVE + SUPERVISOR
-  APP_VERSION: 'v3.2.0',
+  ALLOWED_ROLES: ['ADMIN', 'SUPERVISOR', 'OPS_MANAGER'],
   CITIES: ['CBE', 'CHN']
 };
-const NAV_ITEMS = [{
-  id: 'dash',
+const NAV_TABS = [{
+  id: 'home',
   icon: '🏠',
   label: 'Home'
 }, {
-  id: 'visits',
-  icon: '📍',
-  label: 'Visits'
+  id: 'upload',
+  icon: '📤',
+  label: 'Upload'
 }, {
-  id: 'store',
-  icon: '📦',
-  label: 'Store'
+  id: 'team',
+  icon: '👥',
+  label: 'Team'
 }, {
-  id: 'report',
-  icon: '📊',
-  label: 'Report'
-}];
-const STAT_CARDS = [{
-  id: 'assigned',
-  cls: 'teal',
-  icon: '📋',
-  label: 'Assigned'
-}, {
-  id: 'today',
-  cls: 'green',
-  icon: '📅',
-  label: 'Visits Today'
-}, {
-  id: 'collected',
-  cls: 'orange',
-  icon: '✅',
-  label: 'MTD Collected'
+  id: 'staff',
+  icon: '🧑‍💼',
+  label: 'Staff'
 }, {
   id: 'pending',
-  cls: 'red',
-  icon: '⏳',
-  label: 'Still Pending'
+  icon: '📋',
+  label: 'Pending'
+}, {
+  id: 'issues',
+  icon: '⚠️',
+  label: 'Issues'
+}, {
+  id: 'control',
+  icon: '⚙️',
+  label: 'Control'
 }];
+const ISSUE_TYPES = [{
+  id: 'ALL',
+  label: 'All'
+}, {
+  id: 'ISSUE_JBOX',
+  label: 'J-Box'
+}, {
+  id: 'ISSUE_REFUND',
+  label: 'Refund'
+}, {
+  id: 'ISSUE_MAIL',
+  label: 'Mail Confirm'
+}, {
+  id: 'ISSUE_RECONNECTION',
+  label: 'Reconnect'
+}, {
+  id: 'ISSUE_ADDR',
+  label: 'Addr Change'
+}];
+const ISSUE_SHORT = {
+  ISSUE_JBOX: 'JBOX',
+  ISSUE_REFUND: 'REFUND',
+  ISSUE_MAIL: 'MAIL',
+  ISSUE_RECONNECTION: 'RECONNECTION',
+  ISSUE_ADDR: 'ADDR'
+};
+const STATUS_LABELS = {
+  FRESH: 'Fresh',
+  CALLED: 'Called',
+  APPT_FIXED: 'Appt Fixed',
+  NOT_VISITED: 'Not Visited',
+  RESCHEDULED: 'Rescheduled',
+  NOT_REACHABLE: 'Not Reachable',
+  STRIKE_1: 'Strike 1',
+  STRIKE_2: 'Strike 2',
+  STRIKE_3: 'Strike 3',
+  ISSUE_REFUND: 'Refund Issue',
+  ISSUE_RECONNECTION: 'Reconnection',
+  ISSUE_MAIL: 'Mail Confirm',
+  ISSUE_JBOX: 'JBox Issue',
+  ISSUE_ADDR: 'Addr Change',
+  COOLING: 'Cooling',
+  COOLING_POOL: 'Cooling Pool'
+};
+
+// COLUMN_MAP removed in v3.1
+// Backend owns all column normalization — see 03_BaseProcessor.gs _ACT_COL_MAP
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 lib/api.js
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const Api = {
-  async get(params) {
+  async get(p) {
     const url = new URL(CONFIG.API_URL);
     url.searchParams.append('client_id', CONFIG.CLIENT_ID);
-    Object.entries(params).forEach(([k, v]) => url.searchParams.append(k, String(v)));
-    const res = await fetch(url.toString());
-    if (!res.ok) throw new Error('Network error: ' + res.status);
-    const json = await res.json();
-    if (!json.success) throw new Error(json.error || 'Request failed');
-    return json.data;
+    Object.entries(p).forEach(([k, v]) => url.searchParams.append(k, String(v)));
+    const r = await fetch(url.toString());
+    if (!r.ok) throw new Error('Network error');
+    const j = await r.json();
+    if (!j.success) throw new Error(j.error || 'Request failed');
+    return j.data;
   },
   async post(body) {
     const r = await fetch(CONFIG.API_URL, {
@@ -417,7 +514,7 @@ const Api = {
         ...body
       })
     });
-    if (!r.ok) throw new Error('Network error: ' + r.status);
+    if (!r.ok) throw new Error('Network error');
     const j = await r.json();
     if (!j.success) throw new Error(j.error || 'Request failed');
     return j.data;
@@ -427,19 +524,19 @@ const Api = {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📁 lib/session.js
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const SessionStore = {
-  save(data) {
+const SS = {
+  save(d) {
     try {
-      localStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(data));
+      localStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(d));
     } catch {}
   },
   load() {
     try {
-      const raw = localStorage.getItem(CONFIG.SESSION_KEY);
-      if (!raw) return null;
-      const s = JSON.parse(raw);
-      const parts = (s.token || '').split('|');
-      if (parts.length !== 5 || Date.now() > parseInt(parts[4])) {
+      const r = localStorage.getItem(CONFIG.SESSION_KEY);
+      if (!r) return null;
+      const s = JSON.parse(r);
+      const p = (s.token || '').split('|');
+      if (p.length !== 5 || Date.now() > parseInt(p[4])) {
         this.clear();
         return null;
       }
@@ -459,13 +556,11 @@ const SessionStore = {
 //  📁 lib/utils.js
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const Utils = {
-  getGreeting() {
+  greeting() {
     const h = new Date().getHours();
-    if (h < 12) return 'Good morning';
-    if (h < 17) return 'Good afternoon';
-    return 'Good evening';
+    return h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
   },
-  getDateStr() {
+  dateStr() {
     return new Date().toLocaleDateString('en-IN', {
       weekday: 'long',
       day: 'numeric',
@@ -473,72 +568,150 @@ const Utils = {
       year: 'numeric'
     });
   },
-  sanitizePin: v => String(v).replace(/\D/g, '').slice(0, 4),
-  firstName: n => (n || '').split(' ')[0],
-  todayStr() {
-    const d = new Date();
-    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-  },
-  tomorrowStr() {
-    const d = new Date();
-    d.setDate(d.getDate() + 1);
-    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
-  },
-  hoursAgo(isoTs) {
-    if (!isoTs) return 0;
-    try { return Math.round((Date.now() - new Date(isoTs).getTime()) / 3600000); }
-    catch(e) { return 0; }
+  pin: v => String(v).replace(/\D/g, '').slice(0, 4),
+  name1: n => (n || '').split(' ')[0],
+  initials: n => (n || '').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase(),
+  hoursAgo(iso) {
+    if (!iso) return 0;
+    return Math.round((Date.now() - new Date(iso).getTime()) / 3600000);
   },
   fmtHours(h) {
-    if (!h || h < 1)  return 'Just now';
-    if (h < 24)  return h + 'h idle';
-    const d = Math.floor(h / 24);
-    return d + (d === 1 ? ' day' : ' days') + ' idle';
+    if (h < 24) return h + 'h ago';
+    return Math.floor(h / 24) + 'd ago';
   },
-  buildWALink(mobile, msg) {
-    const m = String(mobile).replace(/\D/g, '');
-    const num = m.length === 10 ? '91' + m : m;
-    return 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
+  genBatch(city) {
+    const d = new Date();
+    const m = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'][d.getMonth()];
+    return city + '_' + m + '_' + d.getFullYear() + '_1';
+  },
+  today() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  },
+  qualityClass(score) {
+    if (score >= 90) return 'excellent';
+    if (score >= 75) return 'good';
+    if (score >= 50) return 'average';
+    return 'poor';
+  },
+  qualityLabel(score) {
+    if (score >= 90) return 'Excellent';
+    if (score >= 75) return 'Good';
+    if (score >= 50) return 'Average';
+    return 'Poor';
   }
-};
-const STATUS_LABELS = {
-  FRESH: 'Fresh',
-  CALLED: 'Called',
-  APPT_FIXED: 'Appt Fixed',
-  NOT_VISITED: 'Not Visited',
-  RESCHEDULED: 'Rescheduled',
-  NOT_REACHABLE: 'Not Reachable',
-  COLLECTED: 'Collected',
-  STRIKE_1: 'Strike 1',
-  STRIKE_2: 'Strike 2',
-  STRIKE_3: 'Strike 3',
-  ISSUE_REFUND: 'Refund Issue',
-  ISSUE_RECONNECTION: 'Reconnection',
-  ISSUE_MAIL: 'Mail Confirm',
-  ISSUE_JBOX: 'JBox Issue',
-  ISSUE_ADDR: 'Addr Change'
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📁 hooks/useToast.js
+//  📁 lib/xlsxParser.js
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function useToast() {
-  const [toast, setToast] = useState(null);
-  const show = useCallback((msg, type = 'error') => setToast({
-    msg,
-    type
-  }), []);
-  const hide = useCallback(() => setToast(null), []);
-  return {
-    toast,
-    showToast: show,
-    hideToast: hide
-  };
+function parseExcel(file) {
+  // ── v3.1: Send raw rows with original headers to backend.
+  // Backend owns ALL column normalization via _normalizeHeaders().
+  // No frontend column mapping — works with any ACT Excel format.
+  return new Promise((res, rej) => {
+    const rd = new FileReader();
+    rd.onload = e => {
+      try {
+        const wb = XLSX.read(new Uint8Array(e.target.result), {
+          type: 'array'
+        });
+        const raw = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {
+          defval: ''
+        });
+        if (!raw.length) {
+          rej(new Error('File is empty'));
+          return;
+        }
+        // Send raw rows as-is — backend handles header normalization
+        res({
+          rows: raw,
+          total: raw.length,
+          mapped: raw.length
+        });
+      } catch (err) {
+        rej(new Error('Parse failed: ' + err.message));
+      }
+    };
+    rd.onerror = () => rej(new Error('File read failed'));
+    rd.readAsArrayBuffer(file);
+  });
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📁 hooks/useAuth.js
+//  📁 lib/excelExport.js
+//  Generates downloadable Excel files for ACT reporting
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const ExcelExport = {
+  // ACT Base Quality Report
+  downloadQualityReport(result, batchHistory) {
+    const wb = XLSX.utils.book_new();
+    const today = new Date().toLocaleDateString('en-IN');
+
+    // Sheet 1: Summary
+    const summary = [['CollectPro — ACT Base Quality Report'], ['Generated:', today], [''], ['Batch No', result.batchNo], ['City', result.city || 'CBE'], ['Total Uploaded', result.total], ['Workable', result.workable], ['Rejected', result.rejected], ['Quality Score', (result.quality?.score || 0) + '%'], ['Quality Label', result.quality?.label || ''], [''], ['--- REJECTION BREAKDOWN ---'], ['Missing Account No', result.breakdown?.missingNo || 0], ['Bad Format', result.breakdown?.badFormat || 0], ['Duplicate in Batch', result.breakdown?.dupInBatch || 0], ['Matched Historic Memory', result.breakdown?.historicMatch || 0], ['Already in Pipeline', result.breakdown?.pendingMatch || 0], [''], ['--- ALLOCATION ---'], ['TC Allocated', result.tcAllocated || 0], ['Exec Allocated', result.execAllocated || 0], ['Exec Skipped', result.execSkipped || 0]];
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(summary), 'Summary');
+
+    // Sheet 2: Rejected accounts (if available)
+    if (result.rejectedRows && result.rejectedRows.length > 0) {
+      const rejHeaders = [['Account No', 'Name', 'Mobile', 'Area', 'City', 'Batch No', 'Reject Reason', 'Rejected At']];
+      const rejData = result.rejectedRows.map(r => [r[0], r[1], r[2], r[4], r[5], r[7], r[8], r[9]]);
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([...rejHeaders, ...rejData]), 'Rejected Accounts');
+    }
+
+    // Sheet 3: Batch History
+    if (batchHistory && batchHistory.length > 0) {
+      const histHeaders = [['Batch No', 'City', 'Total', 'Workable', 'Rejected', 'Quality Score', 'Pushed By', 'Date']];
+      const histData = batchHistory.map(b => [b.batchNo, b.city, b.total, b.workable, b.rejected, b.score + '%', b.pushedBy, b.date]);
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([...histHeaders, ...histData]), 'Batch History');
+    }
+    XLSX.writeFile(wb, 'CollectPro_ACT_Base_Quality_Report_' + (result.batchNo || '') + '.xlsx');
+  },
+  // ACT Issues Report
+  downloadIssuesReport(issues) {
+    const wb = XLSX.utils.book_new();
+    const today = new Date().toLocaleDateString('en-IN');
+
+    // Sheet 1: Summary by type
+    const counts = {};
+    ISSUE_TYPES.slice(1).forEach(t => {
+      counts[t.id] = 0;
+    });
+    issues.forEach(i => {
+      if (counts[i.issueType] !== undefined) counts[i.issueType]++;
+    });
+    const summary = [['CollectPro — ACT Issues Report'], ['Generated:', today], ['Total Open Issues:', issues.length], [''], ['Issue Type', 'Count'], ['Junction Box (JBox)', counts['ISSUE_JBOX'] || 0], ['Refund Pending', counts['ISSUE_REFUND'] || 0], ['Mail Confirmation', counts['ISSUE_MAIL'] || 0], ['Reconnection Request', counts['ISSUE_RECONNECTION'] || 0], ['Address Change', counts['ISSUE_ADDR'] || 0], [''], ['Note: Please resolve these issues from your end to enable router recovery.']];
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(summary), 'Issue Summary');
+
+    // Sheet 2: All issues
+    const headers = [['Issue ID', 'Account No', 'Customer', 'Mobile', 'Area', 'City', 'Issue Type', 'TC Remark', 'Status', 'Created At']];
+    const rows = issues.map(i => [i.issueId || '', i.accountNo || '', i.customerName || '', i.mobile || '', i.area || '', i.city || '', i.issueType || '', i.tcRemark || '', i.status || '', i.createdAt || '']);
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([...headers, ...rows]), 'All Issues');
+
+    // Sheet 3: JBox issues only (strongest proof for ACT)
+    const jboxIssues = issues.filter(i => i.issueType === 'ISSUE_JBOX');
+    if (jboxIssues.length > 0) {
+      const jRows = jboxIssues.map(i => [i.issueId || '', i.accountNo || '', i.customerName || '', i.mobile || '', i.area || '', i.tcRemark || '', i.createdAt || '']);
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([[['Junction Box Issues — ACT Responsibility']], [['Account No', 'Customer', 'Mobile', 'Area', 'TC Remark', 'Created At']], ...jRows].flat()), 'JBox Issues (ACT)');
+    }
+    XLSX.writeFile(wb, 'CollectPro_ACT_Issues_Report_' + Utils.today() + '.xlsx');
+  }
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  HOOKS
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function useToast() {
+  const [t, s] = useState(null);
+  return {
+    toast: t,
+    showToast: (m, tp = 'error') => s({
+      msg: m,
+      type: tp
+    }),
+    hideToast: () => s(null)
+  };
+}
 function useAuth({
   onSuccess,
   onError
@@ -547,29 +720,27 @@ function useAuth({
   const login = useCallback(async (city, staffId, pin) => {
     setLoading(true);
     try {
-      const data = await Api.get({
+      const d = await Api.get({
         action: 'login',
-        city: city,
+        city,
         staffId: String(staffId).trim().toUpperCase(),
         pin: pin.trim()
       });
-      if (!CONFIG.ALLOWED_ROLE.includes(data.role)) {
-        throw new Error('This app is for Field Executives only');
-      }
-      const session = {
-        token: data.token,
-        staffId: data.staffId,
-        staffName: data.staffName,
-        role: data.role,
-        city: data.city,
-        clientId: data.clientId,
+      if (!CONFIG.ALLOWED_ROLES.includes(d.role)) throw new Error('Access denied. Admin roles only.');
+      const s = {
+        token: d.token,
+        staffId: d.staffId,
+        staffName: d.staffName,
+        role: d.role,
+        city: d.city,
+        clientId: d.clientId,
         loginAt: Date.now()
       };
-      SessionStore.save(session);
-      onSuccess(session);
+      SS.save(s);
+      onSuccess(s);
     } catch (e) {
-      const msg = e.message.includes('Invalid') ? 'Invalid Staff ID or PIN' : e.message.includes('attempts') ? 'Too many attempts. Wait 10 min.' : e.message || 'Login failed';
-      onError(msg);
+      const m = e.message.includes('Invalid') ? 'Invalid Staff ID or PIN' : e.message.includes('attempts') ? 'Too many attempts. Wait 10 min.' : e.message || 'Login failed';
+      onError(m);
     } finally {
       setLoading(false);
     }
@@ -579,37 +750,167 @@ function useAuth({
     loading
   };
 }
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📁 hooks/useTokenRefresh.js
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function useTokenRefresh(session, onExpired) {
-  const timerRef = useRef(null);
+  const r = useRef(null);
   useEffect(() => {
     if (!session) return;
-    timerRef.current = setInterval(async () => {
+    r.current = setInterval(async () => {
       try {
-        const data = await Api.get({
+        const d = await Api.get({
           action: 'login',
           city: session.city,
           staffId: session.staffId,
           token: session.token
         });
-        SessionStore.save({
+        SS.save({
           ...session,
-          token: data.token,
+          token: d.token,
           loginAt: Date.now()
         });
       } catch {
         onExpired();
       }
     }, CONFIG.REFRESH_MS);
-    return () => clearInterval(timerRef.current);
+    return () => clearInterval(r.current);
   }, [session]);
 }
 
+// Data fetching hook
+function useApiData(session, action, params, deps = []) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const fetch = useCallback(async () => {
+    if (!session) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const d = await Api.get({
+        action,
+        token: session.token,
+        ...(params || {})
+      });
+      setData(d);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  }, [session, action, JSON.stringify(params), ...deps]);
+  useEffect(() => {
+    fetch();
+  }, [fetch]);
+  return {
+    data,
+    loading,
+    error,
+    refresh: fetch
+  };
+}
+function useBaseUpload(session) {
+  const [step, setStep] = useState('idle');
+  const [progress, setProgress] = useState(0);
+  const [stepLabel, setStepLabel] = useState('');
+  const [parsed, setParsed] = useState(null);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState('');
+  const reset = useCallback(() => {
+    setStep('idle');
+    setProgress(0);
+    setStepLabel('');
+    setParsed(null);
+    setResult(null);
+    setError('');
+  }, []);
+  const parseFile = useCallback(async file => {
+    setStep('parsing');
+    setProgress(20);
+    setStepLabel('Reading file...');
+    try {
+      const r = await parseExcel(file);
+      setProgress(100);
+      setStepLabel(r.mapped + ' accounts ready');
+      setParsed(r);
+      setStep('confirm');
+    } catch (e) {
+      setError(e.message);
+      setStep('error');
+    }
+  }, []);
+  const runUpload = useCallback(async ({
+    city,
+    batchNo,
+    mode,
+    autoAllocate
+  }) => {
+    if (!parsed) return;
+    setStep('uploading');
+    const steps = [{
+      p: 15,
+      l: 'Connecting...'
+    }, {
+      p: 30,
+      l: 'Sending ' + parsed.rows.length + ' accounts...'
+    }, {
+      p: 55,
+      l: 'Running duplicate filter...'
+    }, {
+      p: 70,
+      l: 'Checking Historic Memory...'
+    }, {
+      p: 85,
+      l: 'Writing clean base...'
+    }, {
+      p: 95,
+      l: 'Running allocation...'
+    }];
+    let si = 0;
+    const tick = setInterval(() => {
+      if (si < steps.length) {
+        setProgress(steps[si].p);
+        setStepLabel(steps[si].l);
+        si++;
+      }
+    }, 700);
+    try {
+      const d = await Api.post({
+        action: 'upload_base',
+        token: session.token,
+        city,
+        batchNo,
+        mode,
+        autoAllocate,
+        autoAllocateExec: autoAllocate,
+        uploaderStaffId: session.staffId,
+        allCities: [city],
+        rows: parsed.rows
+      });
+      clearInterval(tick);
+      setProgress(100);
+      setStepLabel('Upload complete!');
+      setResult(d);
+      setStep('done');
+    } catch (e) {
+      clearInterval(tick);
+      setError(e.message);
+      setStep('error');
+    }
+  }, [parsed, session]);
+  return {
+    step,
+    progress,
+    stepLabel,
+    parsed,
+    result,
+    error,
+    parseFile,
+    runUpload,
+    reset
+  };
+}
+
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📁 components/ui/Toast.jsx
+//  UI COMPONENTS
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const Toast = ({
   msg,
@@ -617,7 +918,7 @@ const Toast = ({
   onDone
 }) => {
   useEffect(() => {
-    const t = setTimeout(onDone, 3200);
+    const t = setTimeout(onDone, 3500);
     return () => clearTimeout(t);
   }, []);
   return /*#__PURE__*/React.createElement("div", {
@@ -626,25 +927,14 @@ const Toast = ({
     className: `toast-inner ${type}`
   }, msg));
 };
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📁 components/ui/PinDots.jsx
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const PinDots = ({
-  length = 0,
-  total = 4
+  length = 0
 }) => /*#__PURE__*/React.createElement("div", {
   className: "pin-dots"
-}, Array.from({
-  length: total
-}).map((_, i) => /*#__PURE__*/React.createElement("div", {
+}, [0, 1, 2, 3].map(i => /*#__PURE__*/React.createElement("div", {
   key: i,
   className: `pin-dot${length > i ? ' filled' : ''}`
 })));
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📁 components/ui/BrandLogo.jsx
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const BrandLogo = ({
   size = 'lg'
 }) => {
@@ -664,754 +954,802 @@ const BrandLogo = ({
       color: '#fff',
       letterSpacing: '.5px',
       flexShrink: 0,
-      boxShadow: lg ? '0 8px 28px rgba(13,148,136,.28)' : 'none'
+      boxShadow: lg ? '0 8px 28px rgba(220,38,38,.28)' : 'none'
     }
   }, "VOA");
 };
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📁 components/layout/AppHeader.jsx
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const AppHeader = ({
-  session,
-  onLogout
+const Skel = ({
+  h = 20,
+  mb = 8
 }) => /*#__PURE__*/React.createElement("div", {
-  className: "header"
-}, /*#__PURE__*/React.createElement("div", {
-  className: "brand"
-}, /*#__PURE__*/React.createElement(BrandLogo, {
-  size: "sm"
-}), /*#__PURE__*/React.createElement("span", {
-  className: "brand-name"
-}, "CollectPro"), /*#__PURE__*/React.createElement("span", {
-  className: "brand-role"
-}, "EXECUTIVE")), /*#__PURE__*/React.createElement("div", {
-  className: "hdr-right"
-}, /*#__PURE__*/React.createElement("span", {
-  className: "city-badge"
-}, session.city), /*#__PURE__*/React.createElement("span", {
-  className: "staff-badge"
-}, Utils.firstName(session.staffName)), /*#__PURE__*/React.createElement("button", {
-  className: "logout-btn",
-  onClick: onLogout
-}, "\u2715")));
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📁 components/layout/BottomNav.jsx
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const BottomNav = ({
-  active,
-  onChange
-}) => /*#__PURE__*/React.createElement("div", {
-  className: "bnav"
-}, NAV_ITEMS.map(n => /*#__PURE__*/React.createElement("button", {
-  key: n.id,
-  className: `ni${active === n.id ? ' on' : ''}`,
-  onClick: () => onChange(n.id)
-}, /*#__PURE__*/React.createElement("span", {
-  className: "ico"
-}, n.icon), n.label)));
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📁 components/auth/SessionCard.jsx
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const SessionCard = ({
-  session
-}) => /*#__PURE__*/React.createElement("div", {
-  className: "session-card"
-}, /*#__PURE__*/React.createElement("div", {
+  className: "skeleton",
   style: {
-    fontFamily: 'var(--fh)',
-    fontSize: 13,
-    fontWeight: 700,
-    marginBottom: 12,
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6
+    height: h,
+    marginBottom: mb
   }
-}, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDD10"), " Active Session"), [['Staff ID', session.staffId], ['Name', session.staffName], ['Role', session.role], ['City', session.city], ['Client', session.clientId]].map(([k, v]) => /*#__PURE__*/React.createElement("div", {
-  key: k,
-  className: "session-row"
-}, /*#__PURE__*/React.createElement("span", {
-  className: "session-label"
-}, k), /*#__PURE__*/React.createElement("span", {
-  className: "session-value"
-}, v))), /*#__PURE__*/React.createElement("div", {
-  className: "session-row"
-}, /*#__PURE__*/React.createElement("span", {
-  className: "session-label"
-}, "Token"), /*#__PURE__*/React.createElement("span", {
-  className: "token-active"
-}, /*#__PURE__*/React.createElement("span", {
-  className: "token-dot"
-}), " Active \xB7 auto-refresh 25 min")));
+});
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📁 app/exec/dashboard/page.jsx — DashboardPage
+//  🏠 HOME TAB
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const DashboardPage = ({
+const HomeTab = ({
   session,
   showToast,
   onTabChange
 }) => {
-  const [dash, setDash] = useState(null);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
-    // exec_init returns dashboard + accounts in one call
-    Api.get({
-      action: 'exec_init',
-      token: session.token,
-      staffId: session.staffId,
-      city: session.city
-    }).then(d => {
-      setDash(d.dashboard || d);
-    }).catch(() => {
-      // fallback
-      Api.get({
-        action: 'get_exec_dashboard',
-        token: session.token,
-        staffId: session.staffId,
-        city: session.city
-      }).then(d => setDash(d)).catch(() => {});
-    }).finally(() => setLoading(false));
-  }, []);
-  const vals = {
-    assigned: dash?.totalAssigned,
-    today: dash?.apptToday,
-    collected: dash?.collectedMTD,
-    pending: dash?.totalAssigned
-  };
+  // admin_init: single call returns overview + teamPerf + leaderboard
+  const {
+    data: initData,
+    loading: ovLoad
+  } = useApiData(session, 'admin_init', {
+    city: session.city
+  });
+  const tmLoad = ovLoad;
+  const overview = initData?.overview || null;
+  const teamData = initData?.teamPerf || null;
+  const idleTCs = useMemo(() => {
+    if (!teamData) return [];
+    return teamData.filter(tc => (tc.callsToday || 0) === 0);
+  }, [teamData]);
+  const today = Utils.today();
   return /*#__PURE__*/React.createElement("div", {
-    className: "dash-wrap"
+    className: "wrap"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "dash-greeting"
-  }, Utils.getGreeting(), ", ", Utils.firstName(session.staffName), " \uD83D\uDC4B"), /*#__PURE__*/React.createElement("div", {
-    className: "dash-date"
-  }, Utils.getDateStr()), /*#__PURE__*/React.createElement("div", {
-    className: "dash-cards"
-  }, STAT_CARDS.map(c => /*#__PURE__*/React.createElement("div", {
-    key: c.id,
-    className: `dash-card ${c.cls}`,
-    onClick: () => onTabChange && onTabChange('visits'),
+    className: "dash-greeting",
     style: {
-      cursor: 'pointer'
+      fontFamily: 'var(--fh)',
+      fontSize: 20,
+      fontWeight: 700,
+      marginBottom: 2
     }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "dash-card-icon"
-  }, c.icon), /*#__PURE__*/React.createElement("div", {
-    className: "dash-card-val"
-  }, loading ? /*#__PURE__*/React.createElement("div", {
-    style: {
-      width: 32,
-      height: 28
-    },
-    className: "skeleton"
-  }) : vals[c.id] ?? '—'), /*#__PURE__*/React.createElement("div", {
-    className: "dash-card-lbl"
-  }, c.label)))), dash?.apptToday > 0 && /*#__PURE__*/React.createElement("div", {
-    style: {
-      background: 'var(--accent-lt)',
-      border: '1px solid rgba(13,148,136,.2)',
-      borderRadius: 'var(--r)',
-      padding: '12px 14px',
-      marginTop: 4,
-      fontSize: 13,
-      color: 'var(--accent)',
-      fontWeight: 600,
-      display: 'flex',
-      alignItems: 'center',
-      gap: 8
-    }
-  }, "\uD83D\uDCC5 ", dash.apptToday, " appointment", dash.apptToday > 1 ? 's' : '', " scheduled today"));
-};
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  VISIT OUTCOMES
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const VISIT_GROUPS = [{
-  title: '✅ Successful',
-  color: 'teal',
-  items: [{
-    label: '✅ Collected',
-    value: 'Collected',
-    needsDate: false
-  }]
-}, {
-  title: 'Not Available',
-  color: 'amber',
-  items: [{
-    label: '🏠 Not Home',
-    value: 'Not Home',
-    needsDate: false
-  }, {
-    label: '📅 Rescheduled',
-    value: 'Rescheduled',
-    needsDate: true
-  }, {
-    label: '✈️ Out of Station',
-    value: 'Out of Station',
-    needsDate: false
-  }]
-}, {
-  title: 'Issues',
-  color: 'purple',
-  items: [{
-    label: '💰 Refund Issue',
-    value: 'Refund Issue',
-    needsDate: false
-  }, {
-    label: '🔌 Reconnection',
-    value: 'Reconnection',
-    needsDate: false
-  }, {
-    label: '📧 Mail Confirm',
-    value: 'Mail Confirmation',
-    needsDate: false
-  }, {
-    label: '📦 Junction Box',
-    value: 'Junction Box Issue',
-    needsDate: false
-  }, {
-    label: '📍 Addr Change',
-    value: 'Address Change',
-    needsDate: false
-  }]
-}, {
-  title: 'Non Recoverable',
-  color: 'red',
-  items: [{
-    label: '❌ Wrong Number',
-    value: 'Wrong Number',
-    needsDate: false
-  }, {
-    label: '🏚️ Addr Not Found',
-    value: 'Address Not Found',
-    needsDate: false
-  }, {
-    label: '🏠 Not Willing',
-    value: 'Not Willing',
-    needsDate: false
-  }]
-}];
-const ALL_VISIT_OUTCOMES = VISIT_GROUPS.flatMap(g => g.items);
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  LOG VISIT SHEET
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const LogVisitSheet = ({
-  account,
-  session,
-  onClose,
-  onSuccess,
-  showToast
-}) => {
-  const [outcome, setOutcome] = useState('');
-  const [remark, setRemark] = useState('');
-  const [apptDate, setApptDate] = useState(Utils.tomorrowStr());
-  const [loading, setLoading] = useState(false);
-  const selOut = ALL_VISIT_OUTCOMES.find(o => o.value === outcome);
-  const needsDate = selOut?.needsDate;
-  const isCollected = outcome === 'Collected';
-  const getSelClass = g => ({
-    '✅ Successful': 'sel-teal',
-    'Not Available': 'sel-amber',
-    'Issues': 'sel-purple',
-    'Non Recoverable': 'sel-red'
-  })[g] || 'sel-teal';
-  const handleSubmit = async () => {
-    if (!outcome) {
-      showToast('Select an outcome', 'error');
-      return;
-    }
-    if (needsDate && !apptDate) {
-      showToast('Select new appointment date', 'error');
-      return;
-    }
-    setLoading(true);
-    window._cpOptimisticRemove && window._cpOptimisticRemove(account.accountNo);
-    try {
-      const result = await Api.post({
-        action: 'log_visit_and_refresh',
-        token: session.token,
-        city: session.city,
-        staffId: session.staffId,
-        accountNo: account.accountNo,
-        outcome,
-        execRemark: remark,
-        newApptDate: needsDate ? apptDate : ''
-      });
-      onSuccess(account.name + ' → ' + outcome + (isCollected ? ' ✅' : ''), result?.accounts);
-      onClose();
-    } catch (e) {
-      window._cpOptimisticRestore && window._cpOptimisticRestore(account.accountNo);
-      showToast(e.message, 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
-  return /*#__PURE__*/React.createElement("div", {
-    className: "overlay",
-    onClick: e => e.target === e.currentTarget && onClose()
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "sheet"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "sh-handle"
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "sh-title"
-  }, "Log Visit Outcome"), /*#__PURE__*/React.createElement("div", {
-    className: "sh-sub"
-  }, "Record the result of your field visit"), /*#__PURE__*/React.createElement("div", {
-    className: "sh-cust"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "sh-cust-name"
-  }, account.name), /*#__PURE__*/React.createElement("div", {
-    className: "sh-cust-acc"
-  }, "\uD83D\uDCDE ", account.mobile, " \xB7 ", account.accountNo)), VISIT_GROUPS.map(g => /*#__PURE__*/React.createElement("div", {
-    key: g.title,
-    style: {
-      marginBottom: 12
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "og-title"
-  }, g.title), /*#__PURE__*/React.createElement("div", {
-    className: "og-grid"
-  }, g.items.map(item => /*#__PURE__*/React.createElement("button", {
-    key: item.value,
-    className: `ob${outcome === item.value ? ' ' + getSelClass(g.title) : ''}`,
-    onClick: () => setOutcome(item.value)
-  }, item.label))))), needsDate && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "sl-label",
-    style: {
-      marginBottom: 7
-    }
-  }, "New Appointment Date"), /*#__PURE__*/React.createElement("input", {
-    type: "date",
-    className: "dt-inp",
-    value: apptDate,
-    min: Utils.todayStr(),
-    onChange: e => setApptDate(e.target.value)
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "sl-label",
-    style: {
-      marginBottom: 7
-    }
-  }, "Visit Remark"), /*#__PURE__*/React.createElement("textarea", {
-    className: "rm-ta",
-    value: remark,
-    onChange: e => setRemark(e.target.value),
-    placeholder: isCollected ? 'Collection confirmed. Router received.' : 'Add notes about this visit…',
-    rows: 3
-  }), /*#__PURE__*/React.createElement("button", {
-    className: "sub-btn",
-    onClick: handleSubmit,
-    disabled: !outcome || loading
-  }, loading ? 'Saving…' : isCollected ? '✅ Confirm Collection' : '✅ Submit Outcome'), /*#__PURE__*/React.createElement("div", {
-    className: "cnl-lnk",
-    onClick: onClose
-  }, "Cancel")));
-};
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  VISIT CARD
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const VisitCard = ({
-  account,
-  onLog
-}) => {
-  const [expanded, setExpanded] = useState(false);
-  const today = Utils.todayStr();
-  const isToday   = account.apptDate === today;
-  const isOverdue = account.apptDate && account.apptDate < today;
-  const cls = isOverdue ? 'overdue' : isToday ? 'today' : 'future';
-
-  // Aging calculation — how long has this account been pending
-  const ageHours   = Utils.hoursAgo(account.pendingSince || account.pending_since);
-  const daysPending = Math.floor(ageHours / 24);
-  const agingClass  = isOverdue ? 'critical' : ageHours >= 72 ? 'critical' : ageHours >= 48 ? 'warning' : 'ok';
-  const reschedCount  = account.rescheduleCount || 0;
-  const escalFlag     = account.escalationFlag  || 'NONE';
-  const reschedLabel  = reschedCount > 0 ? ` · Rescheduled ${reschedCount}×` : '';
-  const escalLabel    = escalFlag === 'EXEC_LOOP' ? ' 🚨 ESCALATED' : '';
-  const agingLabel  = isOverdue
-    ? `OVERDUE ${daysPending}d — customer waiting!${reschedLabel}${escalLabel}`
-    : ageHours >= 72
-    ? `CRITICAL: ${daysPending} days pending${reschedLabel}${escalLabel}`
-    : ageHours >= 48
-    ? `${daysPending} days idle${reschedLabel}`
-    : ageHours >= 24
-    ? `${daysPending} day pending${reschedLabel}`
-    : `Scheduled today${reschedLabel}`;
-  const call = () => {
-    window.location.href = 'tel:' + account.mobile.replace(/\D/g, '');
-  };
-  const wa = () => {
-    const msg = `Hi, I'm from VOA field team visiting for ACT router collection.\nAccount: ${account.accountNo} | Customer: ${account.name}\nI'll be arriving shortly. Please be available.`;
-    window.open(Utils.buildWALink(account.mobile, msg), '_blank');
-  };
-
-  // Contact the TC who fixed this appointment
-  const contactTC = () => {
-    const tcName   = account.tcName   || account.tcId || 'TC';
-    const tcMobile = account.tcMobile || '';
-    const appt     = account.apptDate || '';
-    const msg = `Hi ${tcName}, I'm visiting your account today.\n\nAccount: ${account.accountNo}\nCustomer: ${account.name}\nMobile: ${account.mobile}\nArea: ${account.area}\nAppt: ${appt}\nTC Remark: "${account.tcRemark || 'none'}"\n\nPlease share any additional info if needed. — ${account.execId || 'Exec'}`;
-    if (tcMobile) {
-      window.open(Utils.buildWALink(tcMobile, msg), '_blank');
-    } else {
-      // No mobile stored — open WA without number so exec can pick from contacts
-      window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
-    }
-  };
-  return /*#__PURE__*/React.createElement("div", {
-    className: `vc ${cls}`,
-    onClick: () => setExpanded(e => !e)
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "vc-top"
-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "vc-name"
-  }, account.name), /*#__PURE__*/React.createElement("div", {
-    className: "vc-no"
-  }, account.accountNo)), /*#__PURE__*/React.createElement("span", {
-    className: `vc-badge ${account.status === 'APPT_FIXED' ? 'vb-appt' : account.status === 'RESCHEDULED' ? 'vb-reschedule' : 'vb-nr'}`
-  }, STATUS_LABELS[account.status] || account.status)), /*#__PURE__*/React.createElement("div", {
-    className: `vc-aging-strip ${agingClass}`
-  }, isOverdue ? '🔴' : ageHours >= 72 ? '🚨' : ageHours >= 48 ? '⚠️' : '🕐', ' ', agingLabel),
-  /*#__PURE__*/React.createElement("div", {
-    className: "vc-row"
-  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCDE"), /*#__PURE__*/React.createElement("span", {
-    style: {
-      fontFamily: 'var(--fm)',
-      color: 'var(--green)',
-      fontWeight: 600
-    }
-  }, account.mobile)), expanded && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "vc-row"
-  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCCD"), /*#__PURE__*/React.createElement("span", null, account.address, ", ", account.area)), account.srNumber && /*#__PURE__*/React.createElement("div", {
-    className: "vc-row"
-  }, /*#__PURE__*/React.createElement("span", null, "\uD83C\uDFAB"), /*#__PURE__*/React.createElement("span", null, "SR: ", account.srNumber)), account.tcRemark && /*#__PURE__*/React.createElement("div", {
-    className: "vc-row",
-    style: {
-      color: 'var(--text3)'
-    }
-  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDCAC"), /*#__PURE__*/React.createElement("span", null, "TC note: ", account.tcRemark)),
-  account.tcName && /*#__PURE__*/React.createElement("div", {
-    className: "vc-row",
-    style: { color: 'var(--accent)', fontWeight: 600 }
-  }, /*#__PURE__*/React.createElement("span", null, "\uD83D\uDC77"), /*#__PURE__*/React.createElement("span", null, "Fixed by: ", account.tcName, " (", account.tcId, ")"))), account.apptDate && /*#__PURE__*/React.createElement("div", {
-    className: `vc-appt-strip${isOverdue ? ' overdue' : ''}`
-  }, "\uD83D\uDCC5 ", isToday ? 'Today' : isOverdue ? '⚠️ Overdue: ' : '', account.apptDate), /*#__PURE__*/React.createElement("div", {
-    className: "vc-actions",
-    onClick: e => e.stopPropagation()
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "vca call",
-    onClick: call
-  }, "\uD83D\uDCDE Call"), /*#__PURE__*/React.createElement("button", {
-    className: "vca wa",
-    onClick: wa
-  }, "\uD83D\uDCAC WA Customer"), /*#__PURE__*/React.createElement("button", {
-    className: "vca tc-wa",
-    onClick: contactTC,
-    title: "WhatsApp the TC who fixed this appointment"
-  }, "\uD83D\uDCAC TC " + (account.tcName || account.tcId || '')), /*#__PURE__*/React.createElement("button", {
-    className: "vca log",
-    onClick: () => onLog(account)
-  }, "\u270F\uFE0F Log Visit")));
-};
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  VISITS PAGE
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const VISIT_FILTERS = [{
-  label: 'All',
-  value: null
-}, {
-  label: 'Appt Fixed',
-  value: 'APPT_FIXED'
-}, {
-  label: 'Rescheduled',
-  value: 'RESCHEDULED'
-}, {
-  label: 'Not Visited',
-  value: 'NOT_VISITED'
-}];
-const VisitsPage = ({
-  session,
-  showToast
-}) => {
-  const [accounts, setAccounts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState(null);
-  const [logTarget, setLogTarget] = useState(null);
-  const load = useCallback(async prefetchedAccounts => {
-    // If exec_init already loaded accounts, use them directly (no extra call)
-    if (prefetchedAccounts && Array.isArray(prefetchedAccounts)) {
-      setAccounts(prefetchedAccounts);
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    try {
-      // Try exec_init (returns accounts + dashboard in 1 call)
-      const d = await Api.get({
-        action: 'exec_init',
-        token: session.token,
-        staffId: session.staffId,
-        city: session.city
-      });
-      const accounts = d.accounts || d;
-      setAccounts(Array.isArray(accounts) ? accounts : []);
-    } catch (e) {
-      // Fallback to individual call
-      try {
-        const d = await Api.get({
-          action: 'get_exec_accounts',
-          token: session.token,
-          staffId: session.staffId,
-          city: session.city
-        });
-        setAccounts(Array.isArray(d) ? d : []);
-      } catch (e2) {
-        showToast(e2.message, 'error');
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [session]);
-  const [optimisticRemoved, setOptimisticRemoved] = useState([]);
-  useEffect(() => { load(); }, [load]);
-  useEffect(() => {
-    const onRemove  = e => setOptimisticRemoved(p => [...p, e.detail.accountNo]);
-    const onRestore = e => setOptimisticRemoved(p => p.filter(n => n !== e.detail.accountNo));
-    window.addEventListener('cp:optimistic_remove', onRemove);
-    window.addEventListener('cp:optimistic_restore', onRestore);
-    return () => {
-      window.removeEventListener('cp:optimistic_remove', onRemove);
-      window.removeEventListener('cp:optimistic_restore', onRestore);
-    };
-  }, []);
-  const filtered = useMemo(() => {
-    const base = filter ? accounts.filter(a => a.status === filter) : accounts;
-    return base.filter(a => !optimisticRemoved.includes(a.accountNo));
-  }, [accounts, filter, optimisticRemoved]);
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "list-hdr"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "list-hdr-top"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "list-ttl"
-  }, "My Visits ", /*#__PURE__*/React.createElement("span", {
-    style: {
-      color: 'var(--text3)',
-      fontSize: 13
-    }
-  }, "(", filtered.length, ")")), /*#__PURE__*/React.createElement("button", {
-    className: "rfr-btn",
-    onClick: load
-  }, "\u21BB Refresh")), /*#__PURE__*/React.createElement("div", {
-    className: "fchips"
-  }, VISIT_FILTERS.map(f => /*#__PURE__*/React.createElement("button", {
-    key: f.label,
-    className: `fchip${filter === f.value ? ' on' : ''}`,
-    onClick: () => setFilter(f.value)
-  }, f.label)))), /*#__PURE__*/React.createElement("div", {
-    style: {
-      paddingTop: 10
-    }
-  }, loading ? [1, 2, 3].map(i => /*#__PURE__*/React.createElement("div", {
-    key: i,
-    style: {
-      height: 120,
-      margin: '0 14px 10px',
-      borderRadius: 'var(--r)'
-    },
-    className: "skeleton"
-  })) : filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
-    className: "coming-soon"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "coming-soon-icon"
-  }, "\uD83D\uDCED"), /*#__PURE__*/React.createElement("div", {
-    className: "coming-soon-title"
-  }, filter ? 'No accounts with this status' : 'No visits assigned'), /*#__PURE__*/React.createElement("div", {
-    className: "coming-soon-sub"
-  }, "Field visits will appear here after telecallers fix appointments.")) : filtered.map(a => /*#__PURE__*/React.createElement(VisitCard, {
-    key: a.accountNo,
-    account: a,
-    onLog: setLogTarget
-  }))), logTarget && /*#__PURE__*/React.createElement(LogVisitSheet, {
-    account: logTarget,
-    session: session,
-    onClose: () => setLogTarget(null),
-    showToast: showToast,
-    onSuccess: (msg, freshAccounts) => {
-      showToast(msg, 'success');
-      freshAccounts ? setAccounts(freshAccounts) : load();
-    }
-  }));
-};
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  STORE PAGE
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const StorePage = ({
-  session,
-  showToast
-}) => {
-  const [accountNo, setAccountNo] = useState('');
-  const [remark, setRemark] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState([]);
-  const handleSubmit = async () => {
-    if (!accountNo.trim()) {
-      showToast('Enter Account Number', 'error');
-      return;
-    }
-    setLoading(true);
-    try {
-      const d = await Api.post({
-        action: 'submit_store',
-        token: session.token,
-        staffId: session.staffId,
-        city: session.city,
-        accountNo: accountNo.trim(),
-        remark,
-        batchNo: ''
-      });
-      showToast('Store submission recorded — ' + d.submissionId, 'success');
-      setSubmitted(s => [{
-        accountNo: accountNo.trim(),
-        id: d.submissionId,
-        time: new Date().toLocaleTimeString('en-IN')
-      }, ...s.slice(0, 4)]);
-      setAccountNo('');
-      setRemark('');
-    } catch (e) {
-      showToast(e.message, 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
-  return /*#__PURE__*/React.createElement("div", {
-    className: "store-wrap"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "store-card"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "store-card-title"
-  }, "\uD83D\uDCE6 Submit Router to Store"), /*#__PURE__*/React.createElement("div", {
+  }, Utils.greeting(), ", ", Utils.name1(session.staffName), " \uD83D\uDC4B"), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: 12,
       color: 'var(--text3)',
-      marginBottom: 14,
-      lineHeight: 1.5
-    }
-  }, "Record physical router handover at collection point. Fill in the account number of the collected router."), /*#__PURE__*/React.createElement("label", {
-    style: {
-      fontSize: 11,
       fontFamily: 'var(--fm)',
-      color: 'var(--text3)',
-      letterSpacing: '.5px',
-      textTransform: 'uppercase',
-      display: 'block',
-      marginBottom: 6
+      marginBottom: 16
     }
-  }, "Account Number"), /*#__PURE__*/React.createElement("input", {
-    className: "inp",
-    value: accountNo,
-    onChange: e => setAccountNo(e.target.value.toUpperCase()),
-    placeholder: "e.g. 108695502001",
-    autoCapitalize: "characters"
-  }), /*#__PURE__*/React.createElement("label", {
-    style: {
-      fontSize: 11,
-      fontFamily: 'var(--fm)',
-      color: 'var(--text3)',
-      letterSpacing: '.5px',
-      textTransform: 'uppercase',
-      display: 'block',
-      marginBottom: 6
-    }
-  }, "Remark (optional)"), /*#__PURE__*/React.createElement("textarea", {
-    className: "inp",
-    value: remark,
-    onChange: e => setRemark(e.target.value),
-    placeholder: "Router condition, handover notes\u2026",
-    rows: 2,
-    style: {
-      resize: 'none'
-    }
-  }), /*#__PURE__*/React.createElement("button", {
-    className: "store-sub-btn",
-    onClick: handleSubmit,
-    disabled: !accountNo.trim() || loading
-  }, loading ? 'Submitting…' : '📦 Submit to Store')), submitted.length > 0 && /*#__PURE__*/React.createElement("div", {
-    className: "store-card"
+  }, Utils.dateStr()), /*#__PURE__*/React.createElement("div", {
+    className: "stat-grid"
+  }, [{
+    cls: 'red',
+    icon: '📋',
+    label: 'Total Active',
+    val: ovLoad ? null : (overview?.total || 0) - (overview?.collected || 0) - (overview?.nonRecoverable || 0)
+  }, {
+    cls: 'green',
+    icon: '✅',
+    label: 'MTD Collected',
+    val: ovLoad ? null : overview?.mtdCollected
+  }, {
+    cls: 'amber',
+    icon: '⏳',
+    label: 'Pending',
+    val: ovLoad ? null : overview?.pending
+  }, {
+    cls: 'purple',
+    icon: '⚠️',
+    label: 'Open Issues',
+    val: ovLoad ? null : overview?.issues
+  }].map(c => /*#__PURE__*/React.createElement("div", {
+    key: c.label,
+    className: "stat-card"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "store-card-title"
-  }, "\u2705 Submitted This Session"), submitted.map((s, i) => /*#__PURE__*/React.createElement("div", {
-    key: i,
-    className: "store-history"
-  }, /*#__PURE__*/React.createElement("strong", null, s.accountNo), " \xB7 ", s.id, " \xB7 ", s.time))));
+    className: "stat-icon"
+  }, c.icon), /*#__PURE__*/React.createElement("div", {
+    className: `stat-val ${c.cls}`
+  }, c.val === null ? /*#__PURE__*/React.createElement(Skel, {
+    h: 32,
+    mb: 0
+  }) : c.val ?? '—'), /*#__PURE__*/React.createElement("div", {
+    className: "stat-lbl"
+  }, c.label)))), idleTCs.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "alert-card red",
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "alert-icon"
+  }, "\uD83D\uDD14"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "alert-title"
+  }, idleTCs.length, " TC", idleTCs.length > 1 ? 's' : '', " haven't logged a call today"), /*#__PURE__*/React.createElement("div", {
+    className: "alert-sub"
+  }, idleTCs.map(t => Utils.name1(t.name)).join(' · ')))), !ovLoad && (overview?.overdueAppts || 0) > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "alert-card amber",
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "alert-icon"
+  }, "\uD83D\uDCC5"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "alert-title"
+  }, overview.overdueAppts, " overdue appointments"), /*#__PURE__*/React.createElement("div", {
+    className: "alert-sub"
+  }, "Appointments past due date \u2014 execs need to follow up"))), !ovLoad && (overview?.escalations?.TC_CHEAT||0) > 0 && /*#__PURE__*/React.createElement("div",{
+    className:"alert-card",style:{borderLeft:'4px solid #dc2626',background:'#fef2f2',marginBottom:8,padding:'10px 14px',borderRadius:8}
+  }, /*#__PURE__*/React.createElement("div",{style:{fontWeight:700,color:'#dc2626',fontSize:13}},
+    '🚨 '+(overview.escalations.TC_CHEAT)+' fraud alert — TC logging NR repeatedly without genuine contact'),
+  /*#__PURE__*/React.createElement("div",{style:{fontSize:12,color:'#991b1b',marginTop:2}},'Team tab → review flagged TCs')),
+  !ovLoad && (overview?.escalations?.EXEC_LOOP||0) > 0 && /*#__PURE__*/React.createElement("div",{
+    className:"alert-card",style:{borderLeft:'4px solid #d97706',background:'#fffbeb',marginBottom:8,padding:'10px 14px',borderRadius:8}
+  }, /*#__PURE__*/React.createElement("div",{style:{fontWeight:700,color:'#b45309',fontSize:13}},
+    '⚠️ '+(overview.escalations.EXEC_LOOP)+' exec loop — accounts rescheduled 3×+ with no collection'),
+  /*#__PURE__*/React.createElement("div",{style:{fontSize:12,color:'#92400e',marginTop:2}},'Pending tab → Exec Loop filter → reassign')),
+  !ovLoad && (overview?.aging || 0) > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "alert-card amber",
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "alert-icon"
+  }, "\u23F1"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "alert-title"
+  }, overview.aging, " accounts idle > 48 hours"), /*#__PURE__*/React.createElement("div", {
+    className: "alert-sub"
+  }, "These accounts need immediate TC follow-up"))), !ovLoad && idleTCs.length === 0 && (overview?.overdueAppts || 0) === 0 && (overview?.aging || 0) === 0 && /*#__PURE__*/React.createElement("div", {
+    className: "alert-card green",
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "alert-icon"
+  }, "\u2705"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "alert-title"
+  }, "Team is active \u2014 no alerts today"), /*#__PURE__*/React.createElement("div", {
+    className: "alert-sub"
+  }, "All TCs called \xB7 No overdue appointments \xB7 No aging accounts"))), !ovLoad && overview && /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "\uD83D\uDCCA Status Breakdown"), [['Fresh', overview.fresh, 'blue'], ['Called', overview.called, 'green'], ['Appt Fixed', overview.apptFixed, 'green'], ['Rescheduled', overview.rescheduled, 'amber'], ['Issues', overview.issues, 'red'], ['Strikes', overview.strikes, 'red']].filter(([, v]) => v > 0).map(([l, v, c]) => /*#__PURE__*/React.createElement("div", {
+    key: l,
+    className: "row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "row-label"
+  }, l), /*#__PURE__*/React.createElement("span", {
+    className: `row-val ${c}`
+  }, v)))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "\u26A1 Quick Actions"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2,1fr)',
+      gap: 8
+    }
+  }, [{
+    icon: '📤',
+    label: 'Upload Base',
+    tab: 'upload'
+  }, {
+    icon: '👥',
+    label: 'Team View',
+    tab: 'team'
+  }, {
+    icon: '📋',
+    label: 'View Pending',
+    tab: 'pending'
+  }, {
+    icon: '⚠️',
+    label: 'Open Issues',
+    tab: 'issues'
+  }].map(a => /*#__PURE__*/React.createElement("button", {
+    key: a.tab,
+    onClick: () => onTabChange(a.tab),
+    style: {
+      padding: '12px 8px',
+      background: 'var(--bg3)',
+      border: '1px solid var(--border)',
+      borderRadius: 'var(--r)',
+      cursor: 'pointer',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      gap: 4,
+      fontFamily: 'var(--fh)',
+      fontSize: 12,
+      fontWeight: 700,
+      color: 'var(--text)',
+      transition: 'all .15s'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 20
+    }
+  }, a.icon), a.label)))));
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  REPORT PAGE
+//  📤 UPLOAD TAB
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const ReportPage = ({
+const QualityReport = ({
+  result,
+  onReset,
+  session
+}) => {
+  const qClass = Utils.qualityClass(result.quality?.score || 0);
+  const score = result.quality?.score || 0;
+  const {
+    data: batchHistory
+  } = useApiData(session, 'get_batches', {
+    city: result.city || 'CBE'
+  });
+  const maxWorkable = useMemo(() => {
+    if (!batchHistory || !batchHistory.length) return result.workable || 1;
+    return Math.max(...batchHistory.map(b => b.workable || 0), result.workable || 1);
+  }, [batchHistory, result]);
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: `qr-hero ${qClass}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "qr-hero-label"
+  }, "Base Quality Score \xB7 ", result.batchNo), /*#__PURE__*/React.createElement("div", {
+    className: "qr-score"
+  }, score, "%"), /*#__PURE__*/React.createElement("div", {
+    className: "qr-msg"
+  }, result.quality?.label, " \u2014 ", result.quality?.msg)), /*#__PURE__*/React.createElement("div", {
+    className: "qr-stats"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "qr-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "qr-stat-val g"
+  }, result.workable), /*#__PURE__*/React.createElement("div", {
+    className: "qr-stat-lbl"
+  }, "Workable")), /*#__PURE__*/React.createElement("div", {
+    className: "qr-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "qr-stat-val r"
+  }, result.rejected), /*#__PURE__*/React.createElement("div", {
+    className: "qr-stat-lbl"
+  }, "Rejected")), /*#__PURE__*/React.createElement("div", {
+    className: "qr-stat"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "qr-stat-val a"
+  }, result.total), /*#__PURE__*/React.createElement("div", {
+    className: "qr-stat-lbl"
+  }, "Total"))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "\uD83D\uDD0D Rejection Breakdown"), [{
+    label: 'Missing Acct No',
+    val: result.breakdown?.missingNo || 0,
+    color: 'var(--accent)'
+  }, {
+    label: 'Bad Format',
+    val: result.breakdown?.badFormat || 0,
+    color: 'var(--accent)'
+  }, {
+    label: 'Batch Duplicate',
+    val: result.breakdown?.dupInBatch || 0,
+    color: 'var(--amber)'
+  }, {
+    label: 'Historic Match',
+    val: result.breakdown?.historicMatch || 0,
+    color: 'var(--amber)'
+  }, {
+    label: 'In Pipeline',
+    val: result.breakdown?.pendingMatch || 0,
+    color: 'var(--amber)'
+  }].map(item => /*#__PURE__*/React.createElement("div", {
+    key: item.label,
+    className: "qr-bar-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "qr-bar-label"
+  }, item.label), /*#__PURE__*/React.createElement("div", {
+    className: "qr-bar-outer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "qr-bar-inner",
+    style: {
+      width: item.val ? item.val / result.rejected * 100 + '%' : '0%',
+      background: item.color
+    }
+  })), /*#__PURE__*/React.createElement("span", {
+    className: "qr-bar-count",
+    style: {
+      color: item.val ? item.color : 'var(--text3)'
+    }
+  }, item.val))), result.rejected === 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--green)',
+      fontFamily: 'var(--fm)',
+      textAlign: 'center',
+      padding: '6px 0'
+    }
+  }, "\u2705 Zero rejections \u2014 perfect data")), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "\uD83C\uDFAF Allocation Result"), /*#__PURE__*/React.createElement("div", {
+    className: "row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "row-label"
+  }, "\uD83D\uDCDE TCs Assigned"), /*#__PURE__*/React.createElement("span", {
+    className: `row-val ${result.tcError ? 'red' : 'green'}`
+  }, result.tcError ? 'Failed' : result.tcAllocated + ' assigned')), /*#__PURE__*/React.createElement("div", {
+    className: "row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "row-label"
+  }, "\uD83D\uDC77 Execs Assigned"), /*#__PURE__*/React.createElement("span", {
+    className: `row-val ${result.execSkipped > 0 ? 'amber' : 'green'}`
+  }, result.execAllocated, " assigned", result.execSkipped > 0 ? ` · ${result.execSkipped} skipped` : ''))), result.unmappedFxCodes?.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "warn-banner"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 16
+    }
+  }, "\u26A0\uFE0F"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "warn-banner-text"
+  }, result.execSkipped, " accounts skipped \u2014 unmapped FX codes"), /*#__PURE__*/React.createElement("div", {
+    className: "warn-codes"
+  }, result.unmappedFxCodes.join(' · ')))), result.tcError && /*#__PURE__*/React.createElement("div", {
+    className: "warn-banner"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 16
+    }
+  }, "\u26A0\uFE0F"), /*#__PURE__*/React.createElement("div", {
+    className: "warn-banner-text"
+  }, "TC allocation failed: ", result.tcError, ". Activate TCs and run manually.")), /*#__PURE__*/React.createElement("button", {
+    className: "btn-excel",
+    onClick: () => ExcelExport.downloadQualityReport(result, batchHistory || [])
+  }, "\uD83D\uDCE5 Download ACT Base Quality Report (.xlsx)"), batchHistory && batchHistory.length > 0 && /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "section-title",
+    style: {
+      marginTop: 8
+    }
+  }, "\uD83D\uDCCB Batch History"), batchHistory.slice(0, 5).map((b, i) => {
+    const bc = Utils.qualityClass(b.score || 0);
+    return /*#__PURE__*/React.createElement("div", {
+      key: i,
+      className: "batch-item"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `batch-score-circle ${bc}`
+    }, b.score || 0, "%"), /*#__PURE__*/React.createElement("div", {
+      className: "batch-info"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "batch-no"
+    }, b.batchNo), /*#__PURE__*/React.createElement("div", {
+      className: "batch-meta"
+    }, b.city, " \xB7 ", b.date, " \xB7 by ", b.pushedBy)), /*#__PURE__*/React.createElement("div", {
+      className: "batch-stats"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "batch-workable"
+    }, b.workable), /*#__PURE__*/React.createElement("div", {
+      className: "batch-rejected"
+    }, b.rejected, " rejected")));
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "btn-secondary",
+    onClick: onReset
+  }, "\u2191 Upload Another Batch"));
+};
+const UploadTab = ({
   session,
   showToast
 }) => {
-  const [dashboard, setDashboard] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [city, setCity] = useState(session.city || 'CBE');
+  const [mode, setMode] = useState('REPLACE');
+  const [autoAlloc, setAutoAlloc] = useState(true);
+  const [batchNo, setBatchNo] = useState('');
+  const [file, setFile] = useState(null);
+  const [dragOver, setDragOver] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const fileRef = useRef(null);
+  const {
+    step,
+    progress,
+    stepLabel,
+    parsed,
+    result,
+    error,
+    parseFile,
+    runUpload,
+    reset
+  } = useBaseUpload(session);
   useEffect(() => {
-    Api.get({
-      action: 'get_exec_dashboard',
-      token: session.token,
-      staffId: session.staffId,
-      city: session.city
-    }).then(d => setDashboard(d)).catch(e => showToast(e.message, 'error')).finally(() => setLoading(false));
-  }, []);
-  const download = () => {
-    showToast('Visit report downloading…', 'success');
-    const wb = XLSX.utils.book_new();
-    const ws = XLSX.utils.json_to_sheet([{
-      'Staff': session.staffName,
-      'City': session.city,
-      'Date': Utils.todayStr(),
-      'Total Assigned': dashboard?.totalAssigned || 0,
-      'Appt Today': dashboard?.apptToday || 0,
-      'Visited Today': dashboard?.visitedToday || 0,
-      'MTD Collected': dashboard?.collectedMTD || 0
-    }]);
-    XLSX.utils.book_append_sheet(wb, ws, 'Exec Summary');
-    XLSX.writeFile(wb, 'Exec_Report_' + session.staffId + '_' + Utils.todayStr() + '.xlsx');
+    setBatchNo(Utils.genBatch(city));
+  }, [city]);
+  const handleFile = useCallback(async f => {
+    if (!f) return;
+    const ext = f.name.split('.').pop().toLowerCase();
+    if (!['xlsx', 'xls', 'csv'].includes(ext)) {
+      showToast('Only .xlsx, .xls or .csv accepted', 'error');
+      return;
+    }
+    setFile(f);
+    await parseFile(f);
+  }, [parseFile, showToast]);
+  const handleDrop = useCallback(e => {
+    e.preventDefault();
+    setDragOver(false);
+    const f = e.dataTransfer.files[0];
+    if (f) handleFile(f);
+  }, [handleFile]);
+  const handleRun = () => {
+    if (!parsed) {
+      showToast('Select a file first', 'error');
+      return;
+    }
+    if (mode === 'REPLACE') {
+      setShowConfirm(true);
+      return;
+    }
+    doRun();
   };
-  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
-    className: "rpt-hdr"
+  const doRun = () => {
+    setShowConfirm(false);
+    runUpload({
+      city,
+      batchNo: batchNo || Utils.genBatch(city),
+      mode,
+      autoAllocate: autoAlloc
+    });
+  };
+  useEffect(() => {
+    if (step === 'error' && error) showToast(error, 'error');
+  }, [step, error]);
+  if (step === 'done' && result) return /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "rpt-date"
-  }, Utils.todayStr()), /*#__PURE__*/React.createElement("div", {
-    className: "rpt-title"
-  }, "Field Visit Summary"), /*#__PURE__*/React.createElement("div", {
-    className: "rpt-stats"
+    className: "section-title"
+  }, "\uD83D\uDCCA Base Quality Report"), /*#__PURE__*/React.createElement(QualityReport, {
+    result: result,
+    onReset: reset,
+    session: session
+  }));
+  return /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "rpt-stat"
+    className: "section-title"
+  }, "\uD83D\uDCE4 Upload ACT Base"), (step === 'idle' || step === 'confirm') && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: `upload-zone${dragOver ? ' drag-over' : ''}${parsed ? ' has-file' : ''}`,
+    onDragOver: e => {
+      e.preventDefault();
+      setDragOver(true);
+    },
+    onDragLeave: () => setDragOver(false),
+    onDrop: handleDrop,
+    onClick: () => !parsed && fileRef.current?.click()
+  }, /*#__PURE__*/React.createElement("input", {
+    ref: fileRef,
+    type: "file",
+    accept: ".xlsx,.xls,.csv",
+    onChange: e => e.target.files[0] && handleFile(e.target.files[0]),
+    onClick: e => e.stopPropagation()
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "upload-zone-icon"
+  }, parsed ? '✅' : '📂'), /*#__PURE__*/React.createElement("div", {
+    className: "upload-zone-title"
+  }, parsed ? file?.name : 'Tap to select or drag & drop'), /*#__PURE__*/React.createElement("div", {
+    className: "upload-zone-sub"
+  }, parsed ? parsed.mapped + ' accounts ready' : '.xlsx · .xls · .csv — ACT base file')), parsed && /*#__PURE__*/React.createElement("div", {
+    className: "file-info"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 22
+    }
+  }, "\uD83D\uDCCA"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "file-name"
+  }, file?.name), /*#__PURE__*/React.createElement("div", {
+    className: "file-rows"
+  }, parsed.total, " rows \xB7 ", parsed.mapped, " with Account No")), /*#__PURE__*/React.createElement("button", {
+    className: "file-clear",
+    onClick: e => {
+      e.stopPropagation();
+      setFile(null);
+      reset();
+    }
+  }, "\u2715"))), (step === 'parsing' || step === 'uploading') && /*#__PURE__*/React.createElement("div", {
+    className: "progress-wrap"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "rpt-val"
-  }, loading ? '…' : dashboard?.visitedToday || 0), /*#__PURE__*/React.createElement("div", {
-    className: "rpt-lbl"
-  }, "Visited Today")), /*#__PURE__*/React.createElement("div", {
-    className: "rpt-stat"
+    className: "progress-label"
+  }, /*#__PURE__*/React.createElement("span", null, step === 'parsing' ? '📂 Parsing' : '🚀 Uploading'), /*#__PURE__*/React.createElement("span", null, progress, "%")), /*#__PURE__*/React.createElement("div", {
+    className: "progress-bar-outer"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "rpt-val"
-  }, loading ? '…' : dashboard?.apptToday || 0), /*#__PURE__*/React.createElement("div", {
-    className: "rpt-lbl"
-  }, "Appts Today")), /*#__PURE__*/React.createElement("div", {
-    className: "rpt-stat"
+    className: "progress-bar-inner",
+    style: {
+      width: progress + '%'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "progress-step"
+  }, stepLabel)), (step === 'idle' || step === 'confirm') && /*#__PURE__*/React.createElement("div", {
+    className: "config-card"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "rpt-val"
-  }, loading ? '…' : dashboard?.collectedMTD || 0), /*#__PURE__*/React.createElement("div", {
-    className: "rpt-lbl"
-  }, "MTD Collected")))), /*#__PURE__*/React.createElement("div", {
-    className: "rpt-section"
+    className: "config-row"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "config-label"
+  }, "City")), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-wrap"
+  }, CONFIG.CITIES.map(c => /*#__PURE__*/React.createElement("button", {
+    key: c,
+    className: `toggle-opt${city === c ? ' on' : ''}`,
+    onClick: () => setCity(c)
+  }, c)))), /*#__PURE__*/React.createElement("div", {
+    className: "config-row"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "config-label"
+  }, "Mode"), /*#__PURE__*/React.createElement("div", {
+    className: "config-sub"
+  }, mode === 'REPLACE' ? 'Clear existing first' : 'Add to existing')), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-wrap"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: `toggle-opt${mode === 'REPLACE' ? ' on' : ''}`,
+    onClick: () => setMode('REPLACE')
+  }, "Replace"), /*#__PURE__*/React.createElement("button", {
+    className: `toggle-opt on green${mode === 'APPEND' ? ' on' : ''}`,
+    style: mode === 'APPEND' ? {
+      background: 'var(--green)',
+      color: '#fff'
+    } : {},
+    onClick: () => setMode('APPEND')
+  }, "Append"))), /*#__PURE__*/React.createElement("div", {
+    className: "config-row"
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "config-label"
+  }, "Auto Allocate"), /*#__PURE__*/React.createElement("div", {
+    className: "config-sub"
+  }, autoAlloc ? 'TC + Exec auto-assigned' : 'Allocate manually later')), /*#__PURE__*/React.createElement("div", {
+    className: "toggle-wrap"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "toggle-opt",
+    style: autoAlloc ? {
+      background: 'var(--green)',
+      color: '#fff'
+    } : {},
+    onClick: () => setAutoAlloc(true)
+  }, "Auto"), /*#__PURE__*/React.createElement("button", {
+    className: "toggle-opt",
+    style: !autoAlloc ? {
+      background: 'var(--amber)',
+      color: '#fff'
+    } : {},
+    onClick: () => setAutoAlloc(false)
+  }, "Manual"))), /*#__PURE__*/React.createElement("div", {
+    className: "config-row col"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "config-label"
+  }, "Batch Label"), /*#__PURE__*/React.createElement("input", {
+    className: "batch-input",
+    value: batchNo,
+    onChange: e => setBatchNo(e.target.value.toUpperCase()),
+    placeholder: Utils.genBatch(city)
+  }))), (step === 'idle' || step === 'confirm') && /*#__PURE__*/React.createElement("button", {
+    className: "btn-primary",
+    onClick: handleRun,
+    disabled: !parsed || step === 'parsing'
+  }, !parsed ? '📂 Select a file to continue' : `🚀 Run Pipeline — ${parsed.mapped} accounts`), showConfirm && /*#__PURE__*/React.createElement("div", {
+    className: "confirm-overlay",
+    onClick: () => setShowConfirm(false)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "confirm-sheet",
+    onClick: e => e.stopPropagation()
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "confirm-title"
+  }, "\u26A0\uFE0F Replace Mode"), /*#__PURE__*/React.createElement("div", {
+    className: "confirm-body"
+  }, "This will ", /*#__PURE__*/React.createElement("strong", null, "clear TC_Base_Clean for ", city), " before uploading ", parsed?.mapped, " new accounts. This cannot be undone."), /*#__PURE__*/React.createElement("div", {
+    className: "confirm-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "confirm-cancel",
+    onClick: () => setShowConfirm(false)
+  }, "Cancel"), /*#__PURE__*/React.createElement("button", {
+    className: "confirm-proceed",
+    onClick: doRun
+  }, "Yes, Replace")))));
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  👥 TEAM TAB
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const TeamTab = ({
+  session
+}) => {
+  // admin_init returns team + leaderboard — use it if already cached by HomeTab
+  const {
+    data: initData,
+    loading,
+    refresh
+  } = useApiData(session, 'admin_init', {
+    city: session.city
+  });
+  const team = initData?.teamPerf || [];
+  const lb = initData?.leaderboard || [];
+  const idleTCs = useMemo(() => team ? team.filter(t => (t.callsToday || 0) === 0) : [], [team]);
+  const maxColl = useMemo(() => lb ? Math.max(...lb.map(t => t.mtdCollected || 0), 1) : 1, [lb]);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, !loading && idleTCs.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "idle-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "idle-title"
+  }, "\uD83D\uDD14 No calls logged today"), idleTCs.map((tc, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "idle-item"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "idle-avatar"
+  }, Utils.initials(tc.name)), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      fontWeight: 700
+    }
+  }, tc.name), /*#__PURE__*/React.createElement("div", {
+    className: "idle-since"
+  }, tc.staffId, " \xB7 ", tc.total || 0, " assigned")), /*#__PURE__*/React.createElement("span", {
+    className: "badge red"
+  }, "Idle")))), /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "\uD83C\uDFC6 MTD Leaderboard"), loading ? [1, 2, 3].map(i => /*#__PURE__*/React.createElement(Skel, {
+    key: i,
+    h: 64,
+    mb: 8
+  })) : lb?.map((tc, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: `lb-row${tc.staffId === session.staffId ? ' lb-me' : ''}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `lb-rank${i < 3 ? ' r' + (i + 1) : ' rx'}`
+  }, i < 3 ? ['🥇', '🥈', '🥉'][i] : i + 1), /*#__PURE__*/React.createElement("div", {
+    className: "lb-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "lb-name"
+  }, tc.name, tc.staffId === session.staffId && /*#__PURE__*/React.createElement("span", {
+    className: "me-tag"
+  }, "YOU")), /*#__PURE__*/React.createElement("div", {
+    className: "lb-id"
+  }, tc.staffId, " \xB7 \u20B9", tc.mtdEarned || 0)), /*#__PURE__*/React.createElement("div", {
+    className: "lb-bar-wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "lb-bar",
+    style: {
+      width: Math.round(tc.mtdCollected / maxColl * 100) + '%'
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "lb-count"
+  }, tc.mtdCollected || 0))), /*#__PURE__*/React.createElement("div", {
+    className: "section-title",
+    style: {
+      marginTop: 8
+    }
+  }, "\uD83D\uDCCA Team Details"), loading ? [1, 2].map(i => /*#__PURE__*/React.createElement(Skel, {
+    key: i,
+    h: 80,
+    mb: 8
+  })) : team?.map((tc, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "card",
+    style: {
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginBottom: 8
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--fh)',
+      fontSize: 14,
+      fontWeight: 700
+    }
+  }, tc.name), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      fontFamily: 'var(--fm)',
+      color: 'var(--text3)'
+    }
+  }, tc.staffId)), /*#__PURE__*/React.createElement("span", {
+    className: `badge ${(tc.callsToday || 0) > 0 ? 'green' : 'red'}`
+  }, (tc.callsToday || 0) > 0 ? 'Active today' : 'Idle today')), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(4,1fr)',
+      gap: 4,
+      textAlign: 'center'
+    }
+  },
+  // Productivity + escalation alerts
+  (tc.escalatedAccounts || 0) > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {background:'#fef2f2',border:'1px solid #fecaca',borderRadius:8,padding:'6px 10px',
+            marginBottom:8,fontSize:12,fontWeight:700,color:'#dc2626'}
+  }, '🚨 ' + tc.escalatedAccounts + ' account(s) flagged — suspected call fraud. Review immediately.'),
+  tc.avgConsecNR >= 3 && /*#__PURE__*/React.createElement("div", {
+    style: {background:'#fffbeb',border:'1px solid #fde68a',borderRadius:8,padding:'6px 10px',
+            marginBottom:8,fontSize:12,fontWeight:600,color:'#b45309'}
+  }, '⚠️ Avg ' + tc.avgConsecNR + ' consecutive NR per account — low engagement'),
+  (tc.agingAccounts || 0) > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {background:'#fff7ed',border:'1px solid #fed7aa',borderRadius:8,padding:'6px 10px',
+            marginBottom:8,fontSize:12,color:'#c2410c'}
+  }, '⏱ ' + tc.agingAccounts + ' accounts idle >48h — needs follow-up'),
+  /*#__PURE__*/React.createElement("div", {
+    style: {display:'grid',gridTemplateColumns:'repeat(5,1fr)',gap:4,textAlign:'center'}
+  }, [{l:'Assigned',v:tc.total||0,c:'var(--text)'},{l:'Called',v:tc.called||0,c:'var(--green)'},
+     {l:'Appt',v:tc.apptFixed||0,c:'var(--green)'},{l:'MTD',v:tc.mtdCollected||0,c:'var(--accent)'},
+     {l:'Score',v:(tc.productivityGrade||'—'),c:tc.productivityScore>=70?'var(--green)':tc.productivityScore>=50?'var(--amber)':'var(--red)'}
+    ].map(s => /*#__PURE__*/React.createElement("div", {
+      key: s.l,
+      style: {background:'var(--bg3)',borderRadius:8,padding:'8px 4px'}
+    },
+    /*#__PURE__*/React.createElement("div", {
+      style:{fontFamily:'var(--fh)',fontSize:16,fontWeight:800,color:s.c}
+    }, s.v),
+    /*#__PURE__*/React.createElement("div", {
+      style:{fontSize:9,color:'var(--text3)',fontFamily:'var(--fm)',textTransform:'uppercase'}
+    }, s.l)))),
+  /*#__PURE__*/React.createElement("div", {
+    style:{marginTop:6,height:6,background:'var(--bg3)',borderRadius:4,overflow:'hidden'}
+  }, /*#__PURE__*/React.createElement("div", {
+    style:{height:'100%',borderRadius:4,width:(tc.productivityScore||0)+'%',
+           background:tc.productivityScore>=70?'var(--green)':tc.productivityScore>=50?'var(--amber)':'var(--red)',
+           transition:'width .5s'}
+  }))));
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  📋 PENDING TAB
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const PendingTab = ({
+  session
+}) => {
+  const [filter, setFilter] = useState('ALL');
+  const {
+    data: accounts,
+    loading,
+    refresh
+  } = useApiData(session, 'get_tc_accounts', {
+    city: session.city,
+    staffId: 'ALL'
+  });
+  const today = Utils.today();
+  const filtered = useMemo(() => {
+    if (!accounts) return [];
+    const base = accounts.filter(a => {
+      const terminal = ['COLLECTED', 'NR_OWN', 'NR_WRONG_NO', 'NR_ADDR', 'STRIKE_3'];
+      if (terminal.includes(a.status)) return false;
+      if (filter === 'ALL') return true;
+      if (filter === 'AGING') return Utils.hoursAgo(a.pendingSince || a.pending_since) >= 48;
+      if (filter === 'OVERDUE') return a.apptDate && a.apptDate < today && a.status === 'APPT_FIXED';
+      if (filter === 'ISSUES') return a.status.startsWith('ISSUE_');
+      return a.status === filter;
+    });
+    // Sort: overdue first, then by aging hours desc (most urgent at top)
+    return base.sort((a, b) => {
+      const aH = Utils.hoursAgo(a.pendingSince || a.pending_since);
+      const bH = Utils.hoursAgo(b.pendingSince || b.pending_since);
+      const aOv = a.apptDate && a.apptDate < today && a.status === 'APPT_FIXED' ? 1 : 0;
+      const bOv = b.apptDate && b.apptDate < today && b.status === 'APPT_FIXED' ? 1 : 0;
+      if (bOv !== aOv) return bOv - aOv;
+      return bH - aH;
+    });
+  }, [accounts, filter, today]);
+  const chips = [{
+    id: 'ALL',
+    label: 'All'
+  }, {
+    id: 'AGING',
+    label: '⏱ Aging >48h'
+  }, {
+    id: 'OVERDUE',
+    label: '🔴 Overdue'
+  }, {
+    id: 'APPT_FIXED',
+    label: 'Appt Fixed'
+  }, {
+    id: 'FRESH',
+    label: 'Fresh'
+  }, {
+    id: 'ISSUES',
+    label: 'Issues'
+  }];
+  const getUrgency = a => {
+    const h = Utils.hoursAgo(a.pendingSince || a.pending_since);
+    if (a.apptDate && a.apptDate < today && a.status === 'APPT_FIXED') return 'overdue';
+    if (h >= 48) return 'aging';
+    return 'normal';
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
   }, /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
@@ -1420,102 +1758,914 @@ const ReportPage = ({
       marginBottom: 12
     }
   }, /*#__PURE__*/React.createElement("div", {
+    className: "section-title",
     style: {
-      fontSize: 12,
-      fontWeight: 700,
-      color: 'var(--text2)',
-      letterSpacing: '.5px',
-      textTransform: 'uppercase'
+      margin: 0
     }
-  }, "Summary Stats"), /*#__PURE__*/React.createElement("button", {
-    className: "dl-btn",
-    onClick: download
-  }, "\uD83D\uDCE5 Download")), [{
-    label: 'Total Assigned',
-    val: dashboard?.totalAssigned,
-    icon: '📋'
-  }, {
-    label: 'Appts Today',
-    val: dashboard?.apptToday,
-    icon: '📅'
-  }, {
-    label: 'Visited Today',
-    val: dashboard?.visitedToday,
-    icon: '✅'
-  }, {
-    label: 'MTD Collected',
-    val: dashboard?.collectedMTD,
-    icon: '🏆'
-  }].map(r => /*#__PURE__*/React.createElement("div", {
-    key: r.label,
-    className: "rpt-row"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "rpt-time"
-  }, r.icon), /*#__PURE__*/React.createElement("div", {
-    className: "rpt-info"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "rpt-aname"
-  }, r.label)), /*#__PURE__*/React.createElement("div", {
+  }, "\uD83D\uDCCB Pending Accounts"), /*#__PURE__*/React.createElement("button", {
+    onClick: refresh,
     style: {
+      background: 'none',
+      border: 'none',
+      cursor: 'pointer',
+      fontSize: 13,
+      color: 'var(--accent)',
+      fontFamily: 'var(--fm)'
+    }
+  }, "\u21BB Refresh")), /*#__PURE__*/React.createElement("div", {
+    className: "filter-chips"
+  }, chips.map(c => /*#__PURE__*/React.createElement("div", {
+    key: c.id,
+    className: `chip${filter === c.id ? ' on' : ''}`,
+    onClick: () => setFilter(c.id)
+  }, c.label))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text3)',
       fontFamily: 'var(--fm)',
-      fontSize: 18,
-      fontWeight: 500,
-      color: 'var(--accent)'
+      marginBottom: 12
     }
-  }, loading ? '…' : r.val || 0)))));
+  }, loading ? 'Loading...' : filtered.length + ' accounts'), loading ? [1, 2, 3].map(i => /*#__PURE__*/React.createElement(Skel, {
+    key: i,
+    h: 100,
+    mb: 10
+  })) : filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center',
+      padding: '40px 20px',
+      color: 'var(--text3)',
+      fontSize: 13,
+      fontFamily: 'var(--fm)'
+    }
+  }, "No accounts match this filter") : filtered.slice(0, 100).map((a, i) => {
+    const urg = getUrgency(a);
+    const ageH = Utils.hoursAgo(a.pendingSince || a.pending_since);
+    const pendingDays = Math.floor(ageH / 24);
+    const agingLabel  = urg === 'overdue'
+      ? 'OVERDUE APPT'
+      : urg === 'aging'
+      ? (pendingDays >= 1 ? pendingDays + 'd ' + (ageH % 24) + 'h idle' : ageH + 'h idle')
+      : 'Active';
+    const owner       = a.currentOwner || a.current_owner || '';
+    const nextAction  = a.nextAction   || a.next_action   || '';
+    const pendingSince= a.pendingSince  || a.pending_since || '';
+    const lastAction  = a.lastActionTime|| a.last_action_time || '';
+    const ownerRole   = owner.startsWith('TC_') ? '📞 TC' : owner.startsWith('EX_') ? '🏍 Exec' : '⚙️';
+    return /*#__PURE__*/React.createElement("div", {
+      key: i,
+      className: `pending-card ${urg}`
+    },
+    /*#__PURE__*/React.createElement("div", {
+      className: "pc-top"
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      className: "pc-accno"
+    }, a.accountNo || a.account_no), /*#__PURE__*/React.createElement("div", {
+      className: "pc-name"
+    }, a.name), /*#__PURE__*/React.createElement("div", {
+      className: "pc-phone"
+    }, a.mobile)), /*#__PURE__*/React.createElement("span", {
+      className: `badge ${urg === 'overdue' ? 'red' : urg === 'aging' ? 'amber' : 'blue'}`
+    }, urg === 'overdue' ? 'Overdue' : urg === 'aging' ? Utils.fmtHours(ageH) : STATUS_LABELS[a.status] || a.status)),
+    /*#__PURE__*/React.createElement("div", {
+      style: {display:'flex', alignItems:'center', gap:8, margin:'6px 0',
+              padding:'5px 8px', borderRadius:6,
+              background: urg==='overdue' ? '#fef2f2' : urg==='aging' ? '#fffbeb' : '#f0fdf4',
+              fontSize: 12, fontWeight: 700,
+              color: urg==='overdue' ? '#dc2626' : urg==='aging' ? '#b45309' : '#15803d' }
+    },
+      urg==='overdue' ? '🔴' : urg==='aging' ? '⚠️' : '✅', ' ', agingLabel,
+      ' — ', ownerRole, ' ', owner, ' responsible'
+    ),
+    nextAction && /*#__PURE__*/React.createElement("div", {
+      style: {fontSize:12, color:'var(--text3)', marginBottom:4, padding:'0 2px'}
+    }, '→ Next: ', nextAction),
+    /*#__PURE__*/React.createElement("div", {
+      className: "pc-meta"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "pc-area"
+    }, a.area), a.apptDate && /*#__PURE__*/React.createElement("span", {
+      className: "pc-area",
+      style: { color: urg==='overdue' ? 'var(--red)' : 'var(--green)' }
+    }, "📅 ", a.apptDate), a.tcId && /*#__PURE__*/React.createElement("span", {
+      className: "pc-area", style: {background:'#fff7ed', color:'#c2410c', borderRadius:4, padding:'1px 6px'}
+    }, 'TC: ', a.tcId), a.execId && /*#__PURE__*/React.createElement("span", {
+      className: "pc-area", style: {background:'#f0fdfa', color:'#0f766e', borderRadius:4, padding:'1px 6px'}
+    }, 'EX: ', a.execId),
+    (a.rescheduleCount||a.reschedule_count||0) > 0 && /*#__PURE__*/React.createElement('span',{
+      style:{background:'#fef3c7',color:'#92400e',borderRadius:4,padding:'2px 7px',fontSize:11,fontWeight:700,marginLeft:4}
+    },'🔄 ',a.rescheduleCount||a.reschedule_count,'× rescheduled'),
+    (a.escalationFlag||a.escalation_flag) === 'TC_CHEAT' && /*#__PURE__*/React.createElement('span',{
+      style:{background:'#fef2f2',color:'#dc2626',borderRadius:4,padding:'2px 7px',fontSize:11,fontWeight:700,marginLeft:4}
+    },'🚨 Fraud Flag'),
+    (a.escalationFlag||a.escalation_flag) === 'EXEC_LOOP' && /*#__PURE__*/React.createElement('span',{
+      style:{background:'#fef2f2',color:'#dc2626',borderRadius:4,padding:'2px 7px',fontSize:11,fontWeight:700,marginLeft:4}
+    },'🔁 Exec Loop')));
+  }), !loading && filtered.length > 100 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center',
+      fontSize: 12,
+      color: 'var(--text3)',
+      fontFamily: 'var(--fm)',
+      paddingBottom: 8
+    }
+  }, "Showing 100 of ", filtered.length, " \xB7 See full list in Accounts module"));
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📁 app/(authenticated)/layout.jsx — AppShell
+//  ⚠️ ISSUES TAB
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const IssuesTab = ({
+  session,
+  showToast
+}) => {
+  const [typeFilter, setTypeFilter] = useState('ALL');
+  // Fetch issues via get_admin_overview or dedicated action
+  // For now using mock structure — Phase 7 wires to real issues API
+  const {
+    data: rawIssues,
+    loading,
+    refresh
+  } = useApiData(session, 'get_tc_accounts', {
+    city: session.city,
+    staffId: 'ALL'
+  });
+
+  // Extract issue-type accounts from TC accounts
+  const issues = useMemo(() => {
+    if (!rawIssues) return [];
+    return rawIssues.filter(a => a.status && a.status.startsWith('ISSUE_')).map(a => ({
+      issueId: a.accountNo || a.account_no,
+      accountNo: a.accountNo || a.account_no,
+      customerName: a.name,
+      mobile: a.mobile,
+      area: a.area,
+      city: a.city || session.city,
+      issueType: a.status,
+      tcRemark: a.tcRemark || a.tc_remark || '',
+      status: 'Open',
+      createdAt: a.pendingSince || a.pending_since || ''
+    }));
+  }, [rawIssues]);
+  const filtered = useMemo(() => {
+    if (typeFilter === 'ALL') return issues;
+    return issues.filter(i => i.issueType === typeFilter);
+  }, [issues, typeFilter]);
+
+  // Count by type
+  const counts = useMemo(() => {
+    const c = {};
+    ISSUE_TYPES.forEach(t => {
+      c[t.id] = t.id === 'ALL' ? issues.length : issues.filter(i => i.issueType === t.id).length;
+    });
+    return c;
+  }, [issues]);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-title",
+    style: {
+      margin: 0
+    }
+  }, "\u26A0\uFE0F Open Issues"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => ExcelExport.downloadIssuesReport(issues),
+    style: {
+      background: 'var(--green)',
+      border: 'none',
+      borderRadius: 8,
+      color: '#fff',
+      padding: '6px 12px',
+      fontFamily: 'var(--fh)',
+      fontSize: 11,
+      fontWeight: 700,
+      cursor: 'pointer'
+    }
+  }, "\uD83D\uDCE5 ACT Report")), /*#__PURE__*/React.createElement("div", {
+    className: "issue-type-tabs"
+  }, ISSUE_TYPES.map(t => /*#__PURE__*/React.createElement("div", {
+    key: t.id,
+    className: `it-chip${typeFilter === t.id ? ' on' : ''}`,
+    onClick: () => setTypeFilter(t.id)
+  }, t.label, " ", counts[t.id] > 0 && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: 'var(--fm)',
+      fontWeight: 800
+    }
+  }, "(", counts[t.id], ")")))), !loading && issues.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "\uD83D\uDCCA Issue Summary"), ISSUE_TYPES.slice(1).map(t => counts[t.id] > 0 && /*#__PURE__*/React.createElement("div", {
+    key: t.id,
+    className: "row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "row-label"
+  }, t.label), /*#__PURE__*/React.createElement("span", {
+    className: `badge ${t.id === 'ISSUE_JBOX' ? 'purple' : t.id === 'ISSUE_REFUND' ? 'amber' : 'blue'}`
+  }, counts[t.id])))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--text3)',
+      fontFamily: 'var(--fm)',
+      marginBottom: 12
+    }
+  }, loading ? 'Loading...' : filtered.length + ' issues'), loading ? [1, 2, 3].map(i => /*#__PURE__*/React.createElement(Skel, {
+    key: i,
+    h: 110,
+    mb: 10
+  })) : filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: 'center',
+      padding: '40px 20px',
+      color: 'var(--text3)',
+      fontSize: 13,
+      fontFamily: 'var(--fm)'
+    }
+  }, issues.length === 0 ? 'No open issues ✅' : 'No issues of this type') : filtered.map((issue, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "issue-card"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: `issue-type-badge ${ISSUE_SHORT[issue.issueType] || 'ISSUE'}`
+  }, issue.issueType?.replace('ISSUE_', '')?.replace('_', ' ') || 'Issue'), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--fh)',
+      fontSize: 14,
+      fontWeight: 800,
+      color: 'var(--text)',
+      marginBottom: 2
+    }
+  }, issue.accountNo), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 14,
+      fontWeight: 700,
+      marginBottom: 2
+    }
+  }, issue.customerName), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: 'var(--fm)',
+      fontSize: 12,
+      color: 'var(--green)',
+      marginBottom: 4
+    }
+  }, issue.mobile), issue.tcRemark && /*#__PURE__*/React.createElement("div", {
+    className: "issue-remark"
+  }, "\uD83D\uDCAC ", issue.tcRemark), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
+      marginTop: 6
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("span", {
+    className: "pc-area"
+  }, issue.area)), /*#__PURE__*/React.createElement("button", {
+    className: "resolve-btn",
+    onClick: () => showToast('Issue resolution in Phase 7', 'warning')
+  }, "\u2713 Resolve")))), issues.length > 0 && /*#__PURE__*/React.createElement("button", {
+    className: "btn-excel",
+    onClick: () => ExcelExport.downloadIssuesReport(issues)
+  }, "\uD83D\uDCE5 Download ACT Issues Report (.xlsx)"));
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  ⚙️ CONTROL TAB
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const ControlTab = ({
+  session,
+  showToast
+}) => {
+  const [showRolloverConfirm, setShowRolloverConfirm] = useState(false);
+  const [rolloverPreview, setRolloverPreview] = useState(null);
+  const [rolling, setRolling] = useState(false);
+  const {
+    data: cooling,
+    loading: coolLoad,
+    refresh: coolRefresh
+  } = useApiData(session, 'get_cooling_pool', {
+    city: session.city
+  });
+  const loadPreview = async () => {
+    try {
+      const d = await Api.get({
+        action: 'preview_rollover',
+        token: session.token,
+        city: session.city
+      });
+      setRolloverPreview(d);
+      setShowRolloverConfirm(true);
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  };
+  const doRollover = async () => {
+    setRolling(true);
+    setShowRolloverConfirm(false);
+    try {
+      await Api.post({
+        action: 'run_rollover',
+        token: session.token,
+        city: session.city
+      });
+      showToast('Monthly rollover complete!', 'success');
+      setRolloverPreview(null);
+    } catch (e) {
+      showToast(e.message, 'error');
+    } finally {
+      setRolling(false);
+    }
+  };
+  const releaseAccount = async accountNo => {
+    try {
+      await Api.post({
+        action: 'release_cooling',
+        token: session.token,
+        accountNo,
+        city: session.city
+      });
+      showToast(accountNo + ' released from cooling', 'success');
+      coolRefresh();
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  };
+  const today = Utils.today();
+  return /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-title"
+  }, "\u2744\uFE0F Cooling Pool"), coolLoad ? [1, 2].map(i => /*#__PURE__*/React.createElement(Skel, {
+    key: i,
+    h: 80,
+    mb: 8
+  })) : !cooling || cooling.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "alert-card green",
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "alert-icon"
+  }, "\u2705"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "alert-title"
+  }, "Cooling pool is empty"), /*#__PURE__*/React.createElement("div", {
+    className: "alert-sub"
+  }, "No accounts in cooling"))) : cooling.filter(a => a.state !== 'Released').map((a, i) => {
+    const overdue = a.releaseAfter && a.releaseAfter < today;
+    return /*#__PURE__*/React.createElement("div", {
+      key: i,
+      className: `cooling-card${overdue ? ' overdue' : ''}`
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        marginBottom: 6
+      }
+    }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: 'var(--fh)',
+        fontSize: 14,
+        fontWeight: 800
+      }
+    }, a.accountNo), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        fontWeight: 600,
+        marginBottom: 2
+      }
+    }, a.name), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 11,
+        fontFamily: 'var(--fm)',
+        color: 'var(--text3)'
+      }
+    }, a.reason, " \xB7 Release: ", a.releaseAfter)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        textAlign: 'right'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      className: `days-left ${overdue ? 'over' : 'ok'}`
+    }, overdue ? 'Overdue' : (a.daysLeft || 0) + 'd'), /*#__PURE__*/React.createElement("button", {
+      className: "release-btn",
+      onClick: () => releaseAccount(a.accountNo)
+    }, "Release"))), /*#__PURE__*/React.createElement("div", {
+      className: "pc-meta"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "pc-area"
+    }, a.area), /*#__PURE__*/React.createElement("span", {
+      className: "pc-area"
+    }, a.assignedTC)));
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "section-title",
+    style: {
+      marginTop: 8
+    }
+  }, "\uD83D\uDDC2\uFE0F Monthly Rollover"), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "card-title"
+  }, "End of Month Archive"), /*#__PURE__*/React.createElement("div", {
+    className: "row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "row-label"
+  }, "Archives"), /*#__PURE__*/React.createElement("span", {
+    className: "row-val"
+  }, "TC_Base_Raw \xB7 TC_Base_Clean \xB7 TC_Calls")), /*#__PURE__*/React.createElement("div", {
+    className: "row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "row-label"
+  }, "Preserved"), /*#__PURE__*/React.createElement("span", {
+    className: "row-val green"
+  }, "Pending \xB7 Collected \xB7 Historic_Memory")), /*#__PURE__*/React.createElement("div", {
+    className: "row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "row-label"
+  }, "Resets"), /*#__PURE__*/React.createElement("span", {
+    className: "row-val amber"
+  }, "MTD incentive counts"))), /*#__PURE__*/React.createElement("button", {
+    className: "btn-primary",
+    onClick: loadPreview,
+    disabled: rolling
+  }, rolling ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "spinner"
+  }), "Running Rollover...") : '🗂️ Preview & Run Monthly Rollover'), showRolloverConfirm && rolloverPreview && /*#__PURE__*/React.createElement("div", {
+    className: "confirm-overlay",
+    onClick: () => setShowRolloverConfirm(false)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "confirm-sheet",
+    onClick: e => e.stopPropagation()
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "confirm-title"
+  }, "\uD83D\uDDC2\uFE0F Monthly Rollover Preview"), /*#__PURE__*/React.createElement("div", {
+    className: "rollover-preview"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "rollover-row"
+  }, /*#__PURE__*/React.createElement("span", null, "City"), /*#__PURE__*/React.createElement("strong", null, rolloverPreview.city)), /*#__PURE__*/React.createElement("div", {
+    className: "rollover-row"
+  }, /*#__PURE__*/React.createElement("span", null, "To Archive"), /*#__PURE__*/React.createElement("strong", null, rolloverPreview.toArchive, " rows")), /*#__PURE__*/React.createElement("div", {
+    className: "rollover-row"
+  }, /*#__PURE__*/React.createElement("span", null, "Collected"), /*#__PURE__*/React.createElement("strong", {
+    style: {
+      color: 'var(--green)'
+    }
+  }, rolloverPreview.collected)), /*#__PURE__*/React.createElement("div", {
+    className: "rollover-row"
+  }, /*#__PURE__*/React.createElement("span", null, "Pending (kept)"), /*#__PURE__*/React.createElement("strong", {
+    style: {
+      color: 'var(--amber)'
+    }
+  }, rolloverPreview.pending)), /*#__PURE__*/React.createElement("div", {
+    className: "rollover-row"
+  }, /*#__PURE__*/React.createElement("span", null, "Historic will grow by"), /*#__PURE__*/React.createElement("strong", null, rolloverPreview.historicWillGrow))), /*#__PURE__*/React.createElement("div", {
+    className: "confirm-body",
+    style: {
+      marginBottom: 16
+    }
+  }, "This will archive this month's data and reset the pipeline. Pending accounts are preserved."), /*#__PURE__*/React.createElement("div", {
+    className: "confirm-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "confirm-cancel",
+    onClick: () => setShowRolloverConfirm(false)
+  }, "Cancel"), /*#__PURE__*/React.createElement("button", {
+    className: "confirm-proceed",
+    onClick: doRollover
+  }, "Run Rollover")))));
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  🧑‍💼 STAFF TAB — Active/Leave toggle, City switch, Add staff
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const StaffTab = ({
+  session,
+  showToast
+}) => {
+  const [staffList, setStaffList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [roleFilter, setRoleFilter] = useState('ALL');
+  const [cityTarget, setCityTarget] = useState(null);
+  const [showAdd, setShowAdd] = useState(false);
+  const [form, setForm] = useState({
+    staffId: '',
+    displayName: '',
+    role: 'TELECALLER',
+    city: session.city,
+    pin: '1234'
+  });
+  const [adding, setAdding] = useState(false);
+  const loadStaff = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await Api.get({
+        action: 'get_staff_list',
+        token: session.token,
+        city: '',
+        role: ''
+      });
+      setStaffList(Array.isArray(data) ? data : []);
+    } catch (e) {
+      showToast(e.message, 'error');
+    } finally {
+      setLoading(false);
+    }
+  }, [session]);
+  useEffect(() => {
+    loadStaff();
+  }, [loadStaff]);
+  const toggleActive = async s => {
+    try {
+      await Api.post({
+        action: 'set_staff_active',
+        token: session.token,
+        staffId: s.staffId,
+        city: s.city,
+        active: !s.isActive
+      });
+      showToast(s.displayName + (s.isActive ? ' marked on leave' : ' activated'), 'success');
+      loadStaff();
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  };
+  const switchCity = async newCity => {
+    if (!cityTarget) return;
+    try {
+      await Api.post({
+        action: 'update_tc_city',
+        token: session.token,
+        targetStaffId: cityTarget.staffId,
+        newCity
+      });
+      showToast(cityTarget.name + ' moved to ' + newCity, 'success');
+      setCityTarget(null);
+      loadStaff();
+    } catch (e) {
+      showToast(e.message, 'error');
+      setCityTarget(null);
+    }
+  };
+  const resetPin = async s => {
+    const newPin = prompt('New 4-digit PIN for ' + s.displayName + ':');
+    if (!newPin || String(newPin).length < 4) {
+      showToast('PIN must be 4 digits', 'error');
+      return;
+    }
+    try {
+      await Api.post({
+        action: 'reset_pin',
+        token: session.token,
+        staffId: s.staffId,
+        city: s.city,
+        newPin
+      });
+      showToast('PIN reset for ' + s.displayName, 'success');
+    } catch (e) {
+      showToast(e.message, 'error');
+    }
+  };
+  const addStaff = async () => {
+    if (!form.staffId || !form.displayName) {
+      showToast('Staff ID and Name required', 'error');
+      return;
+    }
+    setAdding(true);
+    try {
+      await Api.post({
+        action: 'create_staff',
+        token: session.token,
+        ...form
+      });
+      showToast(form.displayName + ' added ✅', 'success');
+      setForm({
+        staffId: '',
+        displayName: '',
+        role: 'TELECALLER',
+        city: session.city,
+        pin: '1234'
+      });
+      setShowAdd(false);
+      loadStaff();
+    } catch (e) {
+      showToast(e.message, 'error');
+    } finally {
+      setAdding(false);
+    }
+  };
+  const ROLE_FILTERS = [{
+    id: 'ALL',
+    label: 'All'
+  }, {
+    id: 'TELECALLER',
+    label: '📞 TC'
+  }, {
+    id: 'EXECUTIVE',
+    label: '🚗 Exec'
+  }, {
+    id: 'SUPERVISOR',
+    label: '👁 Supervisor'
+  }, {
+    id: 'ADMIN',
+    label: '🔐 Admin'
+  }];
+  const ROLE_OPTIONS = ['TELECALLER', 'EXECUTIVE', 'SUPERVISOR', 'ADMIN'];
+  const getAvClass = role => ({
+    TELECALLER: 'av-tc',
+    EXECUTIVE: 'av-exec',
+    SUPERVISOR: 'av-sup',
+    ADMIN: 'av-admin'
+  })[role] || 'av-default';
+  const manageable = useMemo(() => staffList.filter(s => s.role !== 'OWNER'), [staffList]);
+  const filtered = useMemo(() => roleFilter === 'ALL' ? manageable : manageable.filter(s => s.role === roleFilter), [manageable, roleFilter]);
+  const activeCount = manageable.filter(s => s.isActive).length;
+  const inactiveCount = manageable.filter(s => !s.isActive).length;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "wrap"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "staff-stat-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "staff-stat-box"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "staff-stat-val"
+  }, manageable.length), /*#__PURE__*/React.createElement("div", {
+    className: "staff-stat-lbl"
+  }, "Total Staff")), /*#__PURE__*/React.createElement("div", {
+    className: "staff-stat-box"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "staff-stat-val",
+    style: {
+      color: 'var(--green)'
+    }
+  }, activeCount), /*#__PURE__*/React.createElement("div", {
+    className: "staff-stat-lbl"
+  }, "Active")), /*#__PURE__*/React.createElement("div", {
+    className: "staff-stat-box"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "staff-stat-val",
+    style: {
+      color: 'var(--amber)'
+    }
+  }, inactiveCount), /*#__PURE__*/React.createElement("div", {
+    className: "staff-stat-lbl"
+  }, "On Leave"))), /*#__PURE__*/React.createElement("button", {
+    className: "staff-add-btn",
+    onClick: () => setShowAdd(s => !s)
+  }, showAdd ? '✕ Cancel' : '➕ Add New Staff Member'), showAdd && /*#__PURE__*/React.createElement("div", {
+    className: "staff-add-form"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "saf-title"
+  }, "\uD83E\uDDD1\u200D\uD83D\uDCBC New Staff Details"), /*#__PURE__*/React.createElement("div", {
+    className: "saf-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "saf-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "saf-label"
+  }, "Staff ID"), /*#__PURE__*/React.createElement("input", {
+    className: "saf-input",
+    value: form.staffId,
+    onChange: e => setForm(f => ({
+      ...f,
+      staffId: e.target.value.toUpperCase()
+    })),
+    placeholder: "TC_008"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "saf-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "saf-label"
+  }, "Full Name"), /*#__PURE__*/React.createElement("input", {
+    className: "saf-input",
+    value: form.displayName,
+    onChange: e => setForm(f => ({
+      ...f,
+      displayName: e.target.value
+    })),
+    placeholder: "Name"
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "saf-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "saf-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "saf-label"
+  }, "Role"), /*#__PURE__*/React.createElement("select", {
+    className: "saf-input",
+    value: form.role,
+    onChange: e => setForm(f => ({
+      ...f,
+      role: e.target.value
+    }))
+  }, ROLE_OPTIONS.map(r => /*#__PURE__*/React.createElement("option", {
+    key: r,
+    value: r
+  }, r)))), /*#__PURE__*/React.createElement("div", {
+    className: "saf-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "saf-label"
+  }, "City"), /*#__PURE__*/React.createElement("select", {
+    className: "saf-input",
+    value: form.city,
+    onChange: e => setForm(f => ({
+      ...f,
+      city: e.target.value
+    }))
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "CBE"
+  }, "Coimbatore (CBE)"), /*#__PURE__*/React.createElement("option", {
+    value: "CHN"
+  }, "Chennai (CHN)")))), /*#__PURE__*/React.createElement("div", {
+    className: "saf-grid"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "saf-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "saf-label"
+  }, "Default PIN"), /*#__PURE__*/React.createElement("input", {
+    className: "saf-input",
+    value: form.pin,
+    maxLength: 4,
+    inputMode: "numeric",
+    onChange: e => setForm(f => ({
+      ...f,
+      pin: e.target.value.replace(/\D/g, '')
+    })),
+    placeholder: "1234"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "saf-field",
+    style: {
+      justifyContent: 'flex-end'
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "saf-submit",
+    onClick: addStaff,
+    disabled: adding || !form.staffId || !form.displayName
+  }, adding ? 'Adding…' : '✅ Add Staff')))), /*#__PURE__*/React.createElement("div", {
+    className: "role-chips"
+  }, ROLE_FILTERS.map(f => /*#__PURE__*/React.createElement("button", {
+    key: f.id,
+    className: `role-chip${roleFilter === f.id ? ' on' : ''}`,
+    onClick: () => setRoleFilter(f.id)
+  }, f.label))), loading ? [1, 2, 3, 4].map(i => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      height: 110,
+      borderRadius: 14,
+      marginBottom: 10
+    },
+    className: "skeleton"
+  })) : filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "coming-soon"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "coming-soon-icon"
+  }, "\uD83D\uDC65"), /*#__PURE__*/React.createElement("div", {
+    className: "coming-soon-title"
+  }, "No staff in this category")) : filtered.map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.staffId,
+    className: `scard${s.isActive ? '' : ' inactive'}`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "scard-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: `scard-avatar ${getAvClass(s.role)}`
+  }, Utils.initials(s.displayName)), /*#__PURE__*/React.createElement("div", {
+    className: "scard-info"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "scard-name"
+  }, s.displayName), /*#__PURE__*/React.createElement("div", {
+    className: "scard-meta"
+  }, s.staffId, " \xB7 ", s.city, " \xB7 ", s.role)), /*#__PURE__*/React.createElement("div", {
+    className: "scard-badge"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: `badge ${s.isActive ? 'green' : 'amber'}`
+  }, s.isActive ? 'Active' : 'Leave'))), /*#__PURE__*/React.createElement("div", {
+    className: "scard-divider"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "scard-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: `sact ${s.isActive ? 'sact-leave' : 'sact-activate'}`,
+    onClick: () => toggleActive(s)
+  }, s.isActive ? '🏖️ Mark Leave' : '✅ Activate'), s.role === 'TELECALLER' && /*#__PURE__*/React.createElement("button", {
+    className: "sact sact-city",
+    onClick: () => setCityTarget({
+      staffId: s.staffId,
+      name: s.displayName,
+      currentCity: s.city
+    })
+  }, "\uD83C\uDFD9\uFE0F ", s.city, " \u2192 Switch"), /*#__PURE__*/React.createElement("button", {
+    className: "sact sact-pin",
+    onClick: () => resetPin(s)
+  }, "\uD83D\uDD11 Reset PIN")))), cityTarget && /*#__PURE__*/React.createElement("div", {
+    className: "city-overlay",
+    onClick: () => setCityTarget(null)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "city-drawer",
+    onClick: e => e.stopPropagation()
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "city-handle"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "city-drawer-title"
+  }, "\uD83C\uDFD9\uFE0F Switch City"), /*#__PURE__*/React.createElement("div", {
+    className: "city-drawer-sub"
+  }, "Moving ", /*#__PURE__*/React.createElement("strong", null, cityTarget.name), " from ", /*#__PURE__*/React.createElement("strong", null, cityTarget.currentCity)), ['CBE', 'CHN'].filter(c => c !== cityTarget.currentCity).map(c => /*#__PURE__*/React.createElement("div", {
+    key: c,
+    className: "city-opt",
+    onClick: () => switchCity(c)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "city-opt-icon"
+  }, "\uD83C\uDFD9\uFE0F"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: "city-opt-name"
+  }, c === 'CBE' ? 'Coimbatore' : 'Chennai', " (", c, ")"), /*#__PURE__*/React.createElement("div", {
+    className: "city-opt-sub"
+  }, "Move ", cityTarget.name, " to ", c, " operations")))), /*#__PURE__*/React.createElement("div", {
+    className: "city-cancel",
+    onClick: () => setCityTarget(null)
+  }, "Cancel"))));
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  APP SHELL
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const AppShell = ({
   session,
   onLogout
 }) => {
-  const [activePage, setActivePage] = useState('dash');
+  const [activePage, setActivePage] = useState('home');
   const {
     toast,
     showToast,
     hideToast
   } = useToast();
   const handleLogout = useCallback(() => {
-    SessionStore.clear();
+    SS.clear();
     onLogout();
   }, [onLogout]);
   useTokenRefresh(session, handleLogout);
-  const PAGE_MAP = {
-    dash: /*#__PURE__*/React.createElement(DashboardPage, {
+  const pages = {
+    home: /*#__PURE__*/React.createElement(HomeTab, {
       session: session,
       showToast: showToast,
       onTabChange: setActivePage
     }),
-    visits: /*#__PURE__*/React.createElement(VisitsPage, {
+    upload: /*#__PURE__*/React.createElement(UploadTab, {
       session: session,
       showToast: showToast
     }),
-    store: /*#__PURE__*/React.createElement(StorePage, {
+    team: /*#__PURE__*/React.createElement(TeamTab, {
+      session: session
+    }),
+    staff: /*#__PURE__*/React.createElement(StaffTab, {
       session: session,
       showToast: showToast
     }),
-    report: /*#__PURE__*/React.createElement(ReportPage, {
+    pending: /*#__PURE__*/React.createElement(PendingTab, {
+      session: session
+    }),
+    issues: /*#__PURE__*/React.createElement(IssuesTab, {
+      session: session,
+      showToast: showToast
+    }),
+    control: /*#__PURE__*/React.createElement(ControlTab, {
       session: session,
       showToast: showToast
     })
   };
   return /*#__PURE__*/React.createElement("div", {
     className: "app"
-  }, /*#__PURE__*/React.createElement(AppHeader, {
-    session: session,
-    onLogout: handleLogout
-  }), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "brand-logo"
+  }, "VOA"), /*#__PURE__*/React.createElement("span", {
+    className: "brand-name"
+  }, "CollectPro"), /*#__PURE__*/React.createElement("span", {
+    className: "brand-role"
+  }, "ADMIN")), /*#__PURE__*/React.createElement("div", {
+    className: "hdr-right"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "city-badge"
+  }, session.city), /*#__PURE__*/React.createElement("span", {
+    className: "staff-badge"
+  }, Utils.name1(session.staffName)), /*#__PURE__*/React.createElement("button", {
+    className: "logout-btn",
+    onClick: handleLogout
+  }, "\u2715"))), /*#__PURE__*/React.createElement("div", {
     className: "main-content"
-  }, NAV_ITEMS.map(n => /*#__PURE__*/React.createElement("div", {
+  }, NAV_TABS.map(n => /*#__PURE__*/React.createElement("div", {
     key: n.id,
     className: `page${activePage === n.id ? ' on' : ''}`
-  }, PAGE_MAP[n.id]))), /*#__PURE__*/React.createElement(BottomNav, {
-    active: activePage,
-    onChange: setActivePage
-  }), toast && /*#__PURE__*/React.createElement(Toast, {
+  }, pages[n.id]))), /*#__PURE__*/React.createElement("div", {
+    className: "bnav"
+  }, NAV_TABS.map(n => /*#__PURE__*/React.createElement("button", {
+    key: n.id,
+    className: `ni${activePage === n.id ? ' on' : ''}`,
+    onClick: () => setActivePage(n.id)
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ico"
+  }, n.icon), n.label))), toast && /*#__PURE__*/React.createElement(Toast, {
     msg: toast.msg,
     type: toast.type,
     onDone: hideToast
@@ -1523,8 +2673,7 @@ const AppShell = ({
 };
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📁 components/auth/LoginCard.jsx
-//  KEY DIFFERENCE FROM TC APP: city dropdown added
+//  LOGIN
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const LoginCard = ({
   onLogin
@@ -1548,14 +2697,14 @@ const LoginCard = ({
     loading
   } = useAuth({
     onSuccess: onLogin,
-    onError: msg => {
+    onError: m => {
       shake();
-      setError(msg);
-      showToast(msg, 'error');
+      setError(m);
+      showToast(m, 'error');
       setPin('');
     }
   });
-  const handleSubmit = useCallback(() => {
+  const sub = useCallback(() => {
     if (!staffId.trim()) {
       showToast('Enter your Staff ID');
       return;
@@ -1567,11 +2716,9 @@ const LoginCard = ({
     setError('');
     login(city, staffId, pin);
   }, [city, staffId, pin, login]);
-
-  // Auto-submit on 4th digit
   useEffect(() => {
     if (pin.length === 4 && staffId.trim()) {
-      const t = setTimeout(handleSubmit, 80);
+      const t = setTimeout(sub, 80);
       return () => clearTimeout(t);
     }
   }, [pin, staffId]);
@@ -1585,11 +2732,11 @@ const LoginCard = ({
     size: "lg"
   }), /*#__PURE__*/React.createElement("div", {
     className: "login-title"
-  }, "Executive Console"), /*#__PURE__*/React.createElement("div", {
+  }, "Admin Console"), /*#__PURE__*/React.createElement("div", {
     className: "login-sub"
   }, "CollectPro \xB7 VOA Recovery Operations"), /*#__PURE__*/React.createElement("div", {
     className: "role-pill"
-  }, "\uD83D\uDC77 Field Executive")), /*#__PURE__*/React.createElement("div", {
+  }, "\uD83D\uDEE1\uFE0F Admin Portal")), /*#__PURE__*/React.createElement("div", {
     className: "form-group"
   }, /*#__PURE__*/React.createElement("label", {
     className: "form-label"
@@ -1613,8 +2760,8 @@ const LoginCard = ({
     type: "text",
     value: staffId,
     onChange: e => setStaffId(e.target.value.toUpperCase()),
-    onKeyDown: e => e.key === 'Enter' && handleSubmit(),
-    placeholder: "e.g. EX_001",
+    onKeyDown: e => e.key === 'Enter' && sub(),
+    placeholder: "e.g. AD_001",
     autoCapitalize: "characters",
     autoCorrect: "off",
     spellCheck: false,
@@ -1633,15 +2780,15 @@ const LoginCard = ({
     pattern: "[0-9]*",
     maxLength: 4,
     value: pin,
-    onChange: e => setPin(Utils.sanitizePin(e.target.value)),
-    onKeyDown: e => e.key === 'Enter' && handleSubmit(),
+    onChange: e => setPin(Utils.pin(e.target.value)),
+    onKeyDown: e => e.key === 'Enter' && sub(),
     placeholder: "\u2022 \u2022 \u2022 \u2022",
     disabled: loading
   })), /*#__PURE__*/React.createElement(PinDots, {
     length: pin.length
   }), /*#__PURE__*/React.createElement("button", {
     className: "btn-login",
-    onClick: handleSubmit,
+    onClick: sub,
     disabled: loading
   }, loading ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "spinner"
@@ -1654,15 +2801,13 @@ const LoginCard = ({
   }));
 };
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-//  📁 app/page.jsx — Root auth gate
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ROOT
 const App = () => {
   const [session, setSession] = useState(null);
   const [checking, setChecking] = useState(true);
   useEffect(() => {
-    const saved = SessionStore.load();
-    if (saved) setSession(saved);
+    const s = SS.load();
+    if (s) setSession(s);
     setChecking(false);
   }, []);
   if (checking) return /*#__PURE__*/React.createElement("div", {
@@ -1682,58 +2827,5 @@ const App = () => {
 ReactDOM.createRoot(document.getElementById('root')).render(/*#__PURE__*/React.createElement(App, null));
 
 </script>
-
-<script>
-// ─────────────────────────────────────────────────────────────
-//  COLLECTPRO EXEC APP — PERFORMANCE PATCHES
-//  1. TTL Cache  2. Optimistic UI  3. Offline Detection
-// ─────────────────────────────────────────────────────────────
-
-(function patchApiCache() {
-  const _cache = {};
-  const CACHEABLE = ['exec_init','get_exec_accounts','get_exec_dashboard'];
-  const TTL_MS = 60 * 1000;
-  const _origGet = Api.get.bind(Api);
-  Api.get = async function(params) {
-    const action = params.action || '';
-    if (!CACHEABLE.includes(action)) return _origGet(params);
-    const key = action + '|' + (params.staffId||'') + '|' + (params.city||'');
-    const cached = _cache[key];
-    if (cached && (Date.now() - cached.ts) < TTL_MS) return cached.data;
-    const data = await _origGet(params);
-    _cache[key] = { data, ts: Date.now() };
-    return data;
-  };
-  const _origPost = Api.post.bind(Api);
-  Api.post = async function(body) {
-    const result = await _origPost(body);
-    Object.keys(_cache).forEach(k => delete _cache[k]);
-    return result;
-  };
-  window._cpCacheClear = () => Object.keys(_cache).forEach(k => delete _cache[k]);
-})();
-
-(function patchOffline() {
-  window.addEventListener('offline', () => showOfflineBanner(true));
-  window.addEventListener('online',  () => { showOfflineBanner(false); });
-  function showOfflineBanner(show) {
-    let b = document.getElementById('cp-offline-banner');
-    if (!b) {
-      b = document.createElement('div');
-      b.id = 'cp-offline-banner';
-      b.style.cssText = 'position:fixed;top:56px;left:0;right:0;z-index:999;background:#d97706;color:#fff;text-align:center;padding:8px;font-size:13px;font-weight:600;font-family:var(--fh,sans-serif);transition:transform .3s';
-      b.textContent = '📵 No internet — visit log will retry when reconnected';
-      document.body.appendChild(b);
-    }
-    b.style.transform = show ? 'translateY(0)' : 'translateY(-100%)';
-  }
-})();
-
-(function patchOptimisticUI() {
-  window._cpOptimisticRemove  = (accountNo) => window.dispatchEvent(new CustomEvent('cp:optimistic_remove',  { detail: { accountNo } }));
-  window._cpOptimisticRestore = (accountNo) => window.dispatchEvent(new CustomEvent('cp:optimistic_restore', { detail: { accountNo } }));
-})();
-</script>
-
 </body>
 </html>
