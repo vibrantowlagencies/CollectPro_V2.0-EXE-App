@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CollectPro Test</title>
+</head>
+<body style="font-family:sans-serif;padding:20px;background:#fff5f5">
+<h2 style="color:#dc2626">CollectPro — Mobile Test</h2>
+<div id="out"></div>
+<script>
+var out = document.getElementById('out');
+function log(msg, ok) {
+  var d = document.createElement('div');
+  d.style.cssText = 'padding:8px;margin:4px 0;border-radius:6px;font-size:14px;background:'+(ok?'#f0fdf4':'#fef2f2')+';color:'+(ok?'#16a34a':'#dc2626');
+  d.textContent = (ok ? '✅ ' : '❌ ') + msg;
+  out.appendChild(d);
+}
+
+// Test 1: Basic JS
+try { log('Basic JS works', true); } catch(e) { log('Basic JS: '+e, false); }
+
+// Test 2: Optional chaining
+try { var x = null; var y = x?.foo; log('Optional chaining (?.) works', true); } catch(e) { log('Optional chaining FAILED: '+e, false); }
+
+// Test 3: Nullish coalescing  
+try { var z = null ?? 'default'; log('Nullish coalescing (??) works', true); } catch(e) { log('Nullish coalescing FAILED: '+e, false); }
+
+// Test 4: Template literals
+try { var n='World'; var s=`Hello ${n}`; log('Template literals work', true); } catch(e) { log('Template literals FAILED: '+e, false); }
+
+// Test 5: Arrow functions
+try { var fn = (x) => x*2; log('Arrow functions work', true); } catch(e) { log('Arrow functions FAILED: '+e, false); }
+
+// Test 6: React CDN load
+var s = document.createElement('script');
+s.src = 'https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js';
+s.onload = function() { log('React CDN loaded OK', true); checkReact(); };
+s.onerror = function() { log('React CDN FAILED to load — network issue', false); };
+document.head.appendChild(s);
+
+function checkReact() {
+  if (window.React) { log('React available: v'+React.version, true); }
+  else { log('React not in window', false); }
+}
+
+// Test 7: Chrome version
+var ua = navigator.userAgent;
+var match = ua.match(/Chrome\/(\d+)/);
+log('Browser: ' + ua.substring(0,80), true);
+if (match) {
+  var ver = parseInt(match[1]);
+  log('Chrome version: ' + ver + (ver >= 80 ? ' (supports ?. and ??)' : ' (TOO OLD — upgrade needed)'), ver >= 80);
+}
+</script>
+</body>
+</html>
